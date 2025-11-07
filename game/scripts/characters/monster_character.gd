@@ -4,6 +4,8 @@ class_name MonsterCharacter
 
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
 const CombatSystem = preload("res://scripts/systems/combat_system.gd")
+const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
+const HALF_EXTENT := Vector2(20, 20)
 
 @export var contact_damage := 10
 @export var damage_interval := 0.8
@@ -28,3 +30,4 @@ func _physics_process(delta: float) -> void:
 		var applied = CombatSystem.try_contact_damage(self, _target, contact_damage, _damage_cooldown <= 0.0)
 		if applied:
 			_damage_cooldown = damage_interval
+	WorldBounds.clamp_to_world(self, HALF_EXTENT)

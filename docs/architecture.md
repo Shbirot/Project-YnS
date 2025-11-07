@@ -53,7 +53,8 @@ Future actors (bosses, chests, buffs, coins, etc.) should extend the most specif
 -
 `CombatSystem` (`scripts/systems/combat_system.gd`): Lightweight routines for ticking damage cooldowns and applying hits/contact damage without scattering branching logic across every unit.
 -
-`InteractionSystem` + `Collectible` (`scripts/systems/interaction_system.gd`, `scripts/interactables/collectible.gd`): Governs how pickups/powerups detect heroes and apply effects. Extending `Collectible` keeps interaction costs low because Area2D overlap checks are handled by Godot’s physics server and the per-frame logic stays minimal; debug hotkeys (`E` for enemies, `R` for coins) help test these flows without cluttering release builds.
+- `InteractionSystem` + `Collectible` (`scripts/systems/interaction_system.gd`, `scripts/interactables/collectible.gd`): Governs how pickups/powerups detect heroes and apply effects. Extending `Collectible` keeps interaction costs low because Area2D overlap checks are handled by Godot’s physics server and the per-frame logic stays minimal; debug hotkeys (`E` for enemies, `R` for coins) help test these flows without cluttering release builds.
+- `ImmovableObject` (`scripts/core/immovable_object.gd`): Base for static props/obstacles. Set `block_square_size` to define a blocking collision footprint so characters naturally slide around props; debug key `O` quickly drops random stones/trees/bushes to test pathing.
 -
 `PersistenceManager` (`autoload/persistence_manager.gd`): Snapshots essential runtime state (hero position, currency, health metadata) every 30 seconds to `user://persistence.json` and reapplies it on startup—this keeps editor tweaks or dev/test sessions consistent and lays the groundwork for future player progression saves.
 

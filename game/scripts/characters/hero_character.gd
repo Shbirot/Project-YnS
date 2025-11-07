@@ -3,6 +3,8 @@ extends Character
 class_name HeroCharacter
 
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
+const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
+const HALF_EXTENT := Vector2(20, 20)
 
 @export var accel := 1600.0
 @export var friction := 1200.0
@@ -57,6 +59,7 @@ func _physics_process(_delta: float) -> void:
 	if _move_input == Vector2.ZERO and _touch_id != -1:
 		_move_input = _touch_vector
 	MovementSystem.apply_input_with_accel(self, _move_input, move_speed, accel, friction, _delta)
+	WorldBounds.clamp_to_world(self, HALF_EXTENT)
 
 func _fire_projectile() -> void:
 	if not projectile_scene or not is_enabled:

@@ -3,6 +3,7 @@
 /.export/
 /.godot/
 /mono/
+game/.godot/imported/
 
 # Runtime / persistence artifacts
 *.log

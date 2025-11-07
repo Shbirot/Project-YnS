@@ -35,3 +35,6 @@ func _clamp_to_bounds(pos: Vector2) -> Vector2:
 		clamp(pos.x, min_x, max_x),
 		clamp(pos.y, min_y, max_y)
 	)
+
+func set_world_bounds(rect: Rect2) -> void:
+	world_bounds = rect
