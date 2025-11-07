@@ -1,26 +1,34 @@
 # Godot specific
-.import/
-.export/
-.godot/
-mono/
+/.import/
+/.export/
+/.godot/
+/mono/
+
 # Runtime / persistence artifacts
 *.log
 persistence.json
+
+# Local tooling caches
+/tools/android-sdk/
+/tools/godot/
+
 # Android build artifacts
 /build/
 /dist/
 *.apk
 *.aab
+
 # Python virtual environments
 .venv/
+
 # JetBrains / VS Code
 .idea/
 .vscode/
-# Toolchain caches
-tools/android-sdk/
+
 # Security
-config/keystore/*.keystore
-config/keystore/*.jks
+/config/keystore/*.keystore
+/config/keystore/*.jks
+
 # macOS/Linux junk
 .DS_Store
 Thumbs.db
