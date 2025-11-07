@@ -1,8 +1,10 @@
 extends CharacterBody2D
+class_name VisualGameObject
+
+const Log = preload("res://scripts/utils/log_helper.gd")
 
 ## Base node for every visible entity in the world (characters, pickups, props, etc.).
 ## Provides identity, enable/disable lifecycle hooks, and sprite management.
-class_name VisualGameObject
 
 @export var object_id : String = ""
 @export var display_name : String = "Object"
@@ -15,7 +17,7 @@ func _ready() -> void:
 	_update_enabled_state(is_enabled)
 	if sprite_texture:
 		_apply_texture(sprite_texture)
-	Logger.debug("VisualGameObject ready: %s" % display_name)
+	Log.debug("VisualGameObject ready: %s" % display_name)
 
 func _find_or_create_sprite() -> Sprite2D:
 	var existing = get_node_or_null("Sprite2D")
@@ -44,4 +46,4 @@ func set_sprite_from_path(path: String) -> void:
 		sprite_texture = tex
 		_apply_texture(tex)
 	else:
-		Logger.warn("Failed loading texture for %s from %s" % [display_name, path])
+		Log.warn("Failed loading texture for %s from %s" % [display_name, path])

@@ -1,7 +1,6 @@
 extends NonInteractableObject
-
-## Static prop that optionally blocks movement via a configurable square collision.
 class_name ImmovableObject
+
 
 @export var persistent : bool = false
 @export var block_square_size : int = 0
@@ -17,8 +16,7 @@ func _ready() -> void:
 
 func set_block_square_size(value: int) -> void:
 	_block_square_size = max(value, 0)
-	if typeof(Logger) != TYPE_NIL:
-		Logger.debug("Obstacle %s block size -> %d" % [name, _block_square_size])
+	Log.debug("Obstacle %s block size -> %d" % [name, _block_square_size])
 	_update_blocker()
 
 func get_block_square_size() -> int:
@@ -37,14 +35,12 @@ func _update_blocker() -> void:
 	if not blocker:
 		return
 	if _block_square_size <= 0:
-		if typeof(Logger) != TYPE_NIL:
-			Logger.debug("Obstacle %s non-blocking" % name)
+		Log.debug("Obstacle %s non-blocking" % name)
 		blocker.shape = null
 		return
 	var shape = RectangleShape2D.new()
 	shape.extents = Vector2(_block_square_size, _block_square_size) * 0.5
-	if typeof(Logger) != TYPE_NIL:
-		Logger.debug("Obstacle %s blocker extents %s" % [name, shape.extents])
+	Log.debug("Obstacle %s blocker extents %s" % [name, shape.extents])
 	blocker.shape = shape
 
 func serialize_state() -> Dictionary:

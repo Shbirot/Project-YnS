@@ -14,7 +14,7 @@ func _ready() -> void:
 
 func add_currency(amount: int) -> void:
 	coins += amount
-	Logger.debug("Hero coins=%d" % coins)
+	Log.debug("Hero coins=%d" % coins)
 
 func get_snapshot_data() -> Dictionary:
 	return {

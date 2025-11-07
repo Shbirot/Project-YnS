@@ -1,6 +1,7 @@
 extends RefCounted
-
 class_name WorldBounds
+
+const Log = preload("res://scripts/utils/log_helper.gd")
 
 static var rect := Rect2(-1500, -1500, 3000, 3000)
 
@@ -26,6 +27,6 @@ static func clamp_to_world(body: CharacterBody2D, half_extent: Vector2 = Vector2
 		clamp(body.global_position.x, min_x, max_x),
 		clamp(body.global_position.y, min_y, max_y)
 	)
-	if new_pos != body.global_position and typeof(Logger) != TYPE_NIL:
-		Logger.debug("WorldBounds blocking %s at %s" % [body.name, new_pos])
+	if new_pos != body.global_position:
+		Log.debug("WorldBounds blocking %s at %s" % [body.name, new_pos])
 	body.global_position = new_pos

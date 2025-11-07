@@ -1,5 +1,7 @@
 extends Node
 
+const Log = preload("res://scripts/utils/log_helper.gd")
+
 ## Loads JSON configs from config/settings/ and provides dot-access lookup.
 
 var _settings := {}
@@ -10,8 +12,7 @@ func _ready() -> void:
 	if OS.has_environment("NIGHTFALL_ENV"):
 		_env = OS.get_environment("NIGHTFALL_ENV")
 	_load_settings()
-	if typeof(Logger) != TYPE_NIL:
-		Logger.info("ConfigManager initialized for env=%s" % _env)
+	Log.info("ConfigManager initialized for env=%s" % _env)
 
 func _load_settings() -> void:
 	_settings = {}

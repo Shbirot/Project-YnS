@@ -1,6 +1,6 @@
 extends VisualGameObject
-
 class_name InteractableObject
+
 
 signal interacted(actor)
 
@@ -12,5 +12,5 @@ func can_interact() -> bool:
 
 func interact(actor) -> void:
 	if can_interact():
-		Logger.info("%s interacted with %s" % [actor, display_name])
+		Log.info("%s interacted with %s" % [actor, display_name])
 		interacted.emit(actor)

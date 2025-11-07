@@ -1,6 +1,7 @@
 extends Area2D
-
 class_name Collectible
+
+const Log = preload("res://scripts/utils/log_helper.gd")
 
 const InteractionSystem = preload("res://scripts/systems/interaction_system.gd")
 
@@ -21,7 +22,7 @@ func _on_body_entered(body: Node) -> void:
 		InteractionSystem.handle_collectible(self, body)
 
 func apply_effect(_actor) -> void:
-	Logger.info("%s collected %s" % [_actor.name, display_name])
+	Log.info("%s collected %s" % [_actor.name, display_name])
 	_disable()
 
 func _disable() -> void:

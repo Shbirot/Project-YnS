@@ -1,6 +1,7 @@
 extends Node2D
 
 const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
+const Log = preload("res://scripts/utils/log_helper.gd")
 
 @onready var player = $World/Player
 @onready var spawner = $EnemySpawner
@@ -78,8 +79,7 @@ func _spawn_obstacle_debug() -> void:
 				obstacle.persistent = true
 			world.add_child(obstacle)
 			spawned += 1
-	if typeof(Logger) != TYPE_NIL:
-		Logger.info("Spawned %d debug obstacles" % spawned)
+	Log.info("Spawned %d debug obstacles" % spawned)
 
 func _random_point_near_player() -> Vector2:
 	var distance = 400.0
