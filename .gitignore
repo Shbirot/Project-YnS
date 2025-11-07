@@ -1,7 +1,11 @@
 # Godot specific
 .import/
 .export/
+.godot/
 mono/
+# Runtime / persistence artifacts
+*.log
+persistence.json
 # Android build artifacts
 /build/
 /dist/
@@ -12,6 +16,11 @@ mono/
 # JetBrains / VS Code
 .idea/
 .vscode/
+# Toolchain caches
+tools/android-sdk/
+# Security
+config/keystore/*.keystore
+config/keystore/*.jks
 # macOS/Linux junk
 .DS_Store
 Thumbs.db
