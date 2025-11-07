@@ -32,3 +32,6 @@ persistence.json
 # macOS/Linux junk
 .DS_Store
 Thumbs.db
+
+# Godot Android templates
+/game/android/build/
