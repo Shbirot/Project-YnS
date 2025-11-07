@@ -47,6 +47,7 @@ Future actors (bosses, chests, buffs, coins, etc.) should extend the most specif
 `EnemySpawner`: Randomizes polar spawn points around the hero (`spawn_radius`) and enforces a population cap. Hook balancing knobs here for future scaling or wave logic. In debug builds you can spawn enemies manually (see `scripts/main.gd`).
 -
 `HUD`: Passive view that consumes signals for HP/time/status updates. Add new UI widgets (XP bar, weapon selection) here without touching `Main` once their own signals exist.
+- `CameraController` (`scripts/core/camera_controller.gd`): A reusable `Camera2D` subclass that follows the hero with smoothing and respects world bounds so the viewport scrolls smoothly without moving the map itself.
 -
 `MovementSystem` (`scripts/systems/movement_system.gd`): Static helpers that operate directly on `CharacterBody2D` instances, keeping movement math centralized and cache-friendly even with large crowds.
 -

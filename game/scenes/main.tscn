@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cy3c1m2oxvqmh"]
+[gd_scene load_steps=8 format=3 uid="uid://cy3c1m2oxvqmh"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://sss6m56dpnwa" path="res://scenes/player.tscn" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://bdwhl1u3qikgo" path="res://assets/arena.svg" id="5"]
 [ext_resource type="PackedScene" uid="uid://c06alifgoaehe" path="res://scenes/collectible_coin.tscn" id="6"]
+[ext_resource type="Script" path="res://scripts/core/camera_controller.gd" id="7"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1")
@@ -20,6 +21,11 @@ centered = false
 
 [node name="Player" parent="World" instance=ExtResource("2")]
 position = Vector2(640, 360)
+
+[node name="Camera" type="Camera2D" parent="World"]
+script = ExtResource("7")
+target_path = NodePath("../Player")
+world_bounds = Rect2(-256, -192, 1536, 1080)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3")]
 

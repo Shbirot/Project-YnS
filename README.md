@@ -11,6 +11,7 @@ Infrastructure scaffolding for a Vampire Survivors–style mobile game built wit
 - **OOP gameplay stack**: `VisualGameObject → Character → Hero/Monster` hierarchy keeps future entities consistent, while `ConfigManager` + `Logger` give you data-driven tuning and persistent logs out of the box.
 - **Low-latency systems**: `MovementSystem`, `CombatSystem`, and `InteractionSystem` centralize hot-path mechanics so the arena can sustain large enemy counts without scattering expensive per-node logic.
 - **Persistence-ready**: `PersistenceManager` snapshots hero state (position, coins, health, future progression) every 30s to `user://persistence.json` and restores it on startup—perfect for keeping dev adjustments or future player profiles in sync.
+- **Camera-ready**: `CameraController` keeps the hero centered with smooth scrolling and world bounds so the map stays static while the view tracks action.
 
 ## Repo layout
 
