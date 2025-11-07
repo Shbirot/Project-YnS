@@ -1,0 +1,114 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Nightfall Survivor"
+config/description="Top-down arena roguelite built for mobile."
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.2")
+boot_splash/bg_color=Color(0.105882, 0.121569, 0.223529, 1)
+config/icon="res://assets/icons/app_icon.svg"
+
+[autoload]
+
+Logger="*res://autoload/logger.gd"
+ConfigManager="*res://autoload/config_manager.gd"
+GameConfig="*res://autoload/game_config.gd"
+PersistenceManager="*res://autoload/persistence_manager.gd"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray()
+
+[filesystem]
+
+import/blender/enabled=false
+
+[input]
+
+move_up={
+"deadzone": 0.2,
+"events": [{
+"keycode": 87,
+"type": "InputEventKey"
+}, {
+"keycode": 4194320,
+"type": "InputEventKey"
+}, {
+"keycode": 16777232,
+"type": "InputEventKey"
+}]
+}
+move_down={
+"deadzone": 0.2,
+"events": [{
+"keycode": 83,
+"type": "InputEventKey"
+}, {
+"keycode": 4194322,
+"type": "InputEventKey"
+}, {
+"keycode": 16777234,
+"type": "InputEventKey"
+}]
+}
+move_left={
+"deadzone": 0.2,
+"events": [{
+"keycode": 65,
+"type": "InputEventKey"
+}, {
+"keycode": 4194319,
+"type": "InputEventKey"
+}, {
+"keycode": 16777231,
+"type": "InputEventKey"
+}]
+}
+move_right={
+"deadzone": 0.2,
+"events": [{
+"keycode": 68,
+"type": "InputEventKey"
+}, {
+"keycode": 4194321,
+"type": "InputEventKey"
+}, {
+"keycode": 16777233,
+"type": "InputEventKey"
+}]
+}
+pause_game={
+"deadzone": 0.2,
+"events": [{
+"keycode": 32,
+"type": "InputEventKey"
+}, {
+"keycode": 16777217,
+"type": "InputEventKey"
+}]
+}
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+anti_aliasing/quality/msaa_2d=2
+rasterizer/depth_prepass=true
+environment/default_environment="res://default_env.tres"

@@ -1,0 +1,8 @@
+{
+  "hero": {
+    "move_speed": 350
+  },
+  "spawner": {
+    "max_enemies": 60
+  }
+}

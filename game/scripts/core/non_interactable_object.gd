@@ -1,0 +1,3 @@
+extends VisualGameObject
+
+class_name NonInteractableObject

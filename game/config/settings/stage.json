@@ -1,0 +1,9 @@
+{
+  "spawner": {
+    "spawn_interval": 1.3,
+    "max_enemies": 90
+  },
+  "hero": {
+    "fire_interval": 0.5
+  }
+}

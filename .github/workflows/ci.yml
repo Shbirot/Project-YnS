@@ -1,0 +1,40 @@
+name: Build & Test
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  godot-build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/firebelley/godot-ci:4.2.2
+    env:
+      GODOT_BIN: /usr/local/bin/godot4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache Godot export templates
+        uses: actions/cache@v4
+        with:
+          path: |-
+            ~/.local/share/godot/export_templates
+            ~/.cache/godot
+          key: export-templates-${{ hashFiles('game/project.godot') }}
+      - name: Desktop dev export
+        run: |
+          $GODOT_BIN --headless --path game --export-debug "Desktop Dev"
+      - name: Android stage export
+        env:
+          ANDROID_HOME: /root/android-sdk
+          ANDROID_NDK_ROOT: /root/android-ndk
+        run: |
+          $GODOT_BIN --headless --path game --export-release "Android Stage"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: builds
+          path: |
+            build/**
+            dist/android/stage/*.apk
