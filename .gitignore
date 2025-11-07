@@ -1,0 +1,17 @@
+# Godot specific
+.import/
+.export/
+mono/
+# Android build artifacts
+/build/
+/dist/
+*.apk
+*.aab
+# Python virtual environments
+.venv/
+# JetBrains / VS Code
+.idea/
+.vscode/
+# macOS/Linux junk
+.DS_Store
+Thumbs.db
