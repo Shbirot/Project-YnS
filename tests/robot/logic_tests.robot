@@ -20,6 +20,12 @@ Battle Monitor (Hero Static)
 Battle Monitor (Both Moving)
     Run Single Case    ${CASE_DIR}/battle_monitor_moving_test.gd
 
+Battle Monitor (Hero Static Mismatch)
+    Run Single Case    ${CASE_DIR}/battle_monitor_static_mismatch_test.gd
+
+Battle Monitor (Moving Mismatch)
+    Run Single Case    ${CASE_DIR}/battle_monitor_moving_mismatch_test.gd
+
 API Manager
     Run Single Case    ${CASE_DIR}/api_manager_test.gd
 
@@ -77,6 +83,9 @@ Combat Hero Damage
 Combat Monster Damage
     Run Single Case    ${CASE_DIR}/combat_monster_damage_test.gd
 
+Combat Contact Cooldown
+    Run Single Case    ${CASE_DIR}/combat_contact_cooldown_test.gd
+
 Visual Game Object
     Run Single Case    ${CASE_DIR}/visual_game_object_test.gd
 
@@ -103,6 +112,9 @@ Weapon Ammunition
 
 Weapon Ammunition (Error Path)
     Run Single Case    ${CASE_DIR}/weapon_ammunition_error_test.gd
+
+Projectile Ammunition Fallback
+    Run Single Case    ${CASE_DIR}/projectile_ammunition_fallback_test.gd
 
 Object Block Area Clamp
     Run Single Case    ${CASE_DIR}/object_block_area_test.gd
