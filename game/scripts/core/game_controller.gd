@@ -5,6 +5,7 @@ const GameWindow = preload("res://scripts/ui/game_window.gd")
 const AttributesManager = preload("res://scripts/core/attributes_manager.gd")
 const DamageNumberManager = preload("res://scripts/effects/damage_number_manager.gd")
 const Log = preload("res://scripts/utils/log_helper.gd")
+const SceneTreeUtil = preload("res://scripts/utils/scene_tree_util.gd")
 
 var _logger
 var _config_manager
@@ -21,9 +22,9 @@ var _selected_weapon_id := ""
 func initialize() -> void:
 	if _initialized:
 		return
-	_logger = _get_singleton("Logger")
-	_config_manager = _get_singleton("ConfigManager")
-	_persistence_manager = _get_singleton("PersistenceManager")
+	_logger = SceneTreeUtil.get_autoload("Logger")
+	_config_manager = SceneTreeUtil.get_autoload("ConfigManager")
+	_persistence_manager = SceneTreeUtil.get_autoload("PersistenceManager")
 	_setup_menu_layer()
 	var disable_api := false
 	if OS.has_environment("DISABLE_API_MANAGER"):
@@ -191,15 +192,3 @@ func get_attributes_manager() -> AttributesManager:
 
 func get_damage_number_manager() -> DamageNumberManager:
 	return _damage_manager
-
-func _get_singleton(name: String):
-	var loop = Engine.get_main_loop()
-	if loop is SceneTree:
-		var root = loop.get_root()
-		if root:
-			var node = root.get_node_or_null(name)
-			if node == null:
-				Log.warn("GameController: singleton %s not found" % name)
-			return node
-	Log.warn("GameController: unable to access singleton %s (scene tree unavailable)" % name)
-	return null

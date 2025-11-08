@@ -5,6 +5,7 @@ class_name HeroCharacter
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
 const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
 const WeaponAmmunition = preload("res://scripts/weapons/ammunition_base.gd")
+const SceneTreeUtil = preload("res://scripts/utils/scene_tree_util.gd")
 const HALF_EXTENT := Vector2(20, 20)
 
 @export var accel := 1600.0
@@ -36,7 +37,7 @@ func _ensure_timer() -> Timer:
 
 func _ready() -> void:
 	super._ready()
-	_attributes_manager = _get_attributes_manager()
+	_attributes_manager = SceneTreeUtil.get_manager("attributes_manager")
 	_sync_attributes()
 	set_process_unhandled_input(true)
 	set_fire_interval_value(fire_interval)
@@ -128,19 +129,9 @@ func set_damage_type(damage_type: String) -> void:
 	_damage_type = damage_type
 	Log.debug("HeroCharacter %s damage_type=%s" % [_log_name(), damage_type])
 
-func _get_attributes_manager():
-	var loop = Engine.get_main_loop()
-	if loop is SceneTree:
-		var root = loop.get_root()
-		if root:
-			var controller = root.get_node_or_null("GameController")
-			if controller and controller.has_method("get_attributes_manager"):
-				return controller.get_attributes_manager()
-	return null
-
 func _sync_attributes() -> void:
 	if _attributes_manager == null:
-		_attributes_manager = _get_attributes_manager()
+		_attributes_manager = SceneTreeUtil.get_manager("attributes_manager")
 		if _attributes_manager == null:
 			if not _attributes_warned:
 				Log.warn("HeroCharacter: attributes manager not set for %s" % _log_name())

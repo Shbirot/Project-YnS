@@ -1,6 +1,7 @@
 extends RefCounted
-
 class_name BaseObjectFactory
+
+const TypeUtil = preload("res://scripts/utils/type_util.gd")
 
 func create(spec: Dictionary) -> Node:
 	var scene_path: String = spec.get("scene", "")
@@ -25,7 +26,7 @@ func _apply_properties(target: Object, properties: Dictionary) -> void:
 		return
 	var property_names := _get_property_name_set(target)
 	for key in properties.keys():
-		var value = _coerce_value(properties[key])
+		var value = TypeUtil.coerce_value(properties[key])
 		if property_names.has(key):
 			target.set(key, value)
 		elif _apply_special_property(target, key, value):
@@ -43,10 +44,3 @@ func _get_property_name_set(target: Object) -> Dictionary:
 		names[prop.get("name")] = true
 	return names
 
-func _coerce_value(value):
-	if value is Array and value.size() == 2:
-		var first = value[0]
-		var second = value[1]
-		if (typeof(first) in [TYPE_INT, TYPE_FLOAT]) and (typeof(second) in [TYPE_INT, TYPE_FLOAT]):
-			return Vector2(first, second)
-	return value

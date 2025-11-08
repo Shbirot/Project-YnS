@@ -1,14 +1,10 @@
 extends RefCounted
-
 class_name Log
 
+const SceneTreeUtil = preload("res://scripts/utils/scene_tree_util.gd")
+
 static func _get_logger():
-	var tree := Engine.get_main_loop()
-	if tree is SceneTree:
-		var root: Node = tree.get_root()
-		if root:
-			return root.get_node_or_null("Logger")
-	return null
+	return SceneTreeUtil.get_autoload("Logger")
 
 static func debug(message: String) -> void:
 	var logger = _get_logger()
