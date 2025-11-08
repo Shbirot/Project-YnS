@@ -4,6 +4,7 @@ class_name HeroCharacter
 
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
 const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
+const WeaponAmmunition = preload("res://scripts/weapons/ammunition_base.gd")
 const HALF_EXTENT := Vector2(20, 20)
 
 @export var accel := 1600.0
@@ -16,6 +17,10 @@ var _move_input := Vector2.ZERO
 var _touch_id := -1
 var _touch_origin := Vector2.ZERO
 var _touch_vector := Vector2.ZERO
+var _ammunition : WeaponAmmunition
+var _damage_type := "physical"
+var _attributes_manager
+var _attributes_warned := false
 
 @onready var fire_timer : Timer = _ensure_timer()
 
@@ -31,10 +36,13 @@ func _ensure_timer() -> Timer:
 
 func _ready() -> void:
 	super._ready()
+	_attributes_manager = _get_attributes_manager()
+	_sync_attributes()
 	set_process_unhandled_input(true)
-	fire_timer.wait_time = fire_interval
+	set_fire_interval_value(fire_interval)
 	fire_timer.timeout.connect(_fire_projectile)
 	fire_timer.start()
+	Log.info("HeroCharacter ready: %s" % _log_name())
 
 func _unhandled_input(event: InputEvent) -> void:
 	var viewport_width = get_viewport_rect().size.x
@@ -62,16 +70,34 @@ func _physics_process(_delta: float) -> void:
 	WorldBounds.clamp_to_world(self, HALF_EXTENT)
 
 func _fire_projectile() -> void:
-	if not projectile_scene or not is_enabled:
+	if not is_enabled:
 		return
 	var direction = _get_target_direction()
 	if direction == Vector2.ZERO:
+		return
+	if _ammunition:
+		var context := {
+			"speed": projectile_speed,
+			"damage": base_damage,
+			"parent": get_parent(),
+			"owner": self,
+			"damage_type": _damage_type,
+			"source": self,
+		}
+		_ammunition.fire(global_position, direction, context)
+		return
+	if projectile_scene == null:
 		return
 	var projectile = projectile_scene.instantiate()
 	projectile.global_position = global_position
 	projectile.direction = direction
 	projectile.speed = projectile_speed
 	projectile.damage = base_damage
+	if projectile.has_method("set"):
+		if "damage_type" in projectile:
+			projectile.damage_type = _damage_type
+		if "damage_source" in projectile:
+			projectile.damage_source = self
 	get_tree().current_scene.add_child(projectile)
 
 func _get_target_direction() -> Vector2:
@@ -86,3 +112,41 @@ func _get_target_direction() -> Vector2:
 			closest_distance = distance
 			closest_dir = (enemy.global_position - global_position).normalized()
 	return closest_dir
+
+func set_ammunition(ammunition: WeaponAmmunition) -> void:
+	_ammunition = ammunition
+
+func set_fire_interval_value(value: float) -> void:
+	fire_interval = max(value, 0.05)
+	if fire_timer:
+		fire_timer.wait_time = fire_interval
+		if not fire_timer.is_stopped():
+			fire_timer.start()
+	_sync_attributes()
+
+func set_damage_type(damage_type: String) -> void:
+	_damage_type = damage_type
+	Log.debug("HeroCharacter %s damage_type=%s" % [_log_name(), damage_type])
+
+func _get_attributes_manager():
+	var loop = Engine.get_main_loop()
+	if loop is SceneTree:
+		var root = loop.get_root()
+		if root:
+			var controller = root.get_node_or_null("GameController")
+			if controller and controller.has_method("get_attributes_manager"):
+				return controller.get_attributes_manager()
+	return null
+
+func _sync_attributes() -> void:
+	if _attributes_manager == null:
+		_attributes_manager = _get_attributes_manager()
+		if _attributes_manager == null:
+			if not _attributes_warned:
+				Log.warn("HeroCharacter: attributes manager not set for %s" % _log_name())
+				_attributes_warned = true
+			return
+	_attributes_manager.set_attribute("hp", max_health)
+	_attributes_manager.set_attribute("fire_rate", fire_interval)
+	_attributes_manager.set_attribute("projectile_speed", projectile_speed)
+	_attributes_warned = false
