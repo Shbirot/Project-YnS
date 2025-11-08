@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/projectile.svg" id="1"]
+
+[node name="SparkImpact" type="Sprite2D"]
+texture = ExtResource("1")
+modulate = Color(0.8, 0.9, 1, 0.8)
+scale = Vector2(0.6, 0.6)

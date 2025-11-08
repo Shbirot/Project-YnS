@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/arena.svg" id="1"]
+
+[node name="FireExplosion" type="Sprite2D"]
+texture = ExtResource("1")
+modulate = Color(1, 0.4, 0.2, 0.7)
+scale = Vector2(0.3, 0.3)
