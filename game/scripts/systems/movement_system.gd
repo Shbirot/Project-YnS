@@ -2,21 +2,21 @@ extends RefCounted
 
 class_name MovementSystem
 
+const Calc = preload("res://scripts/core/calculation_manager.gd")
+
 static func apply_directional_input(body: CharacterBody2D, direction: Vector2, speed: float) -> void:
 	if not body:
 		return
-	var target_velocity = direction.normalized() * speed if direction != Vector2.ZERO else Vector2.ZERO
-	body.velocity = target_velocity
+	body.velocity = Calc.velocity_from_direction(direction, speed)
 	_move_body_if_ready(body)
 
 static func apply_input_with_accel(body: CharacterBody2D, direction: Vector2, speed: float, accel: float, friction: float, delta: float) -> void:
 	if not body:
 		return
 	if direction == Vector2.ZERO:
-		body.velocity = body.velocity.move_toward(Vector2.ZERO, friction * delta)
+		body.velocity = Calc.decelerate_velocity(body.velocity, friction, delta)
 	else:
-		var target = direction.normalized() * speed
-		body.velocity = body.velocity.move_toward(target, accel * delta)
+		body.velocity = Calc.accelerate_velocity(body.velocity, direction, speed, accel, delta)
 	_move_body_if_ready(body)
 
 static func seek_target(body: CharacterBody2D, target: Node2D, speed: float) -> void:

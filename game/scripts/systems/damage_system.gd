@@ -3,8 +3,7 @@ extends RefCounted
 class_name DamageSystem
 
 const Log = preload("res://scripts/utils/log_helper.gd")
-
-static var _rng := RandomNumberGenerator.new()
+const Calc = preload("res://scripts/core/calculation_manager.gd")
 
 static func apply_projectile_damage(target: Node, base_damage: float, damage_type: String, hit_position: Vector2, source = null) -> void:
 	if target == null:
@@ -37,10 +36,4 @@ static func _calculate_final_damage(base_damage: float) -> Dictionary:
 			Log.warn("DamageSystem: attributes manager unavailable")
 	else:
 		Log.warn("DamageSystem: controller missing during damage calculation")
-	if _rng == null:
-		_rng = RandomNumberGenerator.new()
-	var is_crit = _rng.randf() < crit_rate
-	var final_damage = base_damage
-	if is_crit:
-		final_damage = round(base_damage * crit_multiplier)
-	return {"damage": final_damage, "is_crit": is_crit}
+	return Calc.roll_damage(base_damage, crit_rate, crit_multiplier)
