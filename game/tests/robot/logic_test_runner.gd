@@ -8,14 +8,18 @@ var _summary := {"total": 0, "failed": 0}
 var _output_path := "user://logic_results.json"
 
 func _initialize() -> void:
+	_disable_file_logging()
 	_parse_args()
 	_setup_environment()
 	_run_all_cases()
 	_write_results()
-	var exit_code = 0
-	if _summary.failed > 0:
-		exit_code = 1
+	var exit_code = 1 if _summary.failed > 0 else 0
 	quit(exit_code)
+
+func _disable_file_logging() -> void:
+	var logger = Engine.get_main_loop().root.get_node_or_null("Logger")
+	if logger and logger.has_variable("_file_logging_enabled"):
+		logger._file_logging_enabled = false
 
 func _parse_args() -> void:
 	for arg in OS.get_cmdline_args():
@@ -69,9 +73,10 @@ func _write_results() -> void:
 		"summary": _summary,
 		"tests": _results,
 	}
+	var json = JSON.new()
+	var text = json.stringify(payload)
 	var file = FileAccess.open(_output_path, FileAccess.WRITE)
 	if file:
-		var json = JSON.new()
-		file.store_string(json.stringify(payload))
+		file.store_string(text)
 	else:
 		push_warning("Unable to write logic test results to %s" % _output_path)

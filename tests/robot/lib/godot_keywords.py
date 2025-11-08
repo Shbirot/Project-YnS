@@ -19,6 +19,14 @@ class GodotKeywords:
             raise AssertionError(f"Godot binary not found at {self.godot_bin}")
         output_dir = Path(tempfile.mkdtemp(prefix="godot-tests-"))
         result_file = output_dir / "logic_results.json"
+        env = os.environ.copy()
+        env.setdefault("NIGHTFALL_DISABLE_FILE_LOGS", "1")
+        godot_home = Path(env.get("GODOT_USER_HOME", self.repo_root / ".godot-test"))
+        env["GODOT_USER_HOME"] = str(godot_home)
+        logs_dir = godot_home / "app_userdata" / "Nightfall Survivor" / "logs"
+        logs_dir.mkdir(parents=True, exist_ok=True)
+        # Also set XDG_DATA_HOME so Godot's dir helpers stay inside the sandbox
+        env.setdefault("XDG_DATA_HOME", str(self.repo_root / ".godot-data"))
         cmd = [
             str(self.godot_bin),
             "--headless",
@@ -34,6 +42,7 @@ class GodotKeywords:
             stderr=subprocess.STDOUT,
             text=True,
             check=False,
+            env=env,
         )
         if completed.returncode != 0:
             raise AssertionError(
