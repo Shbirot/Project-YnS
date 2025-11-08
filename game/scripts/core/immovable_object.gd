@@ -1,6 +1,5 @@
-extends NonInteractableObject
+extends StaticEntity
 class_name ImmovableObject
-
 
 @export var persistent : bool = false
 @export var block_square_size : int = 0
@@ -9,9 +8,24 @@ var _block_square_size := 0
 var blocker : CollisionShape2D
 
 func _ready() -> void:
-	blocker = _ensure_blocker()
-	set_block_square_size(block_square_size)
+	# Set properties for obstacles
+	physics_mode = PhysicsMode.STATIC
+	collision_mode = CollisionMode.PHYSICAL
+	movement_mode = MovementMode.STATIC
+	interaction_type = InteractionType.NONE
+	render_tier = RenderTier.IMPORTANT
+
 	super._ready()
+
+	# Check for existing CollisionShape2D in scene (either direct child or in StaticBody2D)
+	var existing_blocker = get_node_or_null("Blocker")
+	if not existing_blocker and static_body:
+		existing_blocker = static_body.get_node_or_null("CollisionShape2D")
+
+	# Use existing blocker or the one created by StaticEntity
+	blocker = existing_blocker if existing_blocker else collision_shape
+
+	set_block_square_size(block_square_size)
 	add_to_group("obstacles")
 
 func set_block_square_size(value: int) -> void:
@@ -22,15 +36,6 @@ func set_block_square_size(value: int) -> void:
 func get_block_square_size() -> int:
 	return _block_square_size
 
-func _ensure_blocker() -> CollisionShape2D:
-	var node = get_node_or_null("Blocker")
-	if node:
-		return node
-	node = CollisionShape2D.new()
-	node.name = "Blocker"
-	add_child(node)
-	return node
-
 func _update_blocker() -> void:
 	if not blocker:
 		return
@@ -39,8 +44,8 @@ func _update_blocker() -> void:
 		blocker.shape = null
 		return
 	var shape = RectangleShape2D.new()
-	shape.extents = Vector2(_block_square_size, _block_square_size) * 0.5
-	Log.debug("Obstacle %s blocker extents %s" % [name, shape.extents])
+	shape.size = Vector2(_block_square_size, _block_square_size)
+	Log.debug("Obstacle %s blocker size %s" % [name, shape.size])
 	blocker.shape = shape
 
 func serialize_state() -> Dictionary:

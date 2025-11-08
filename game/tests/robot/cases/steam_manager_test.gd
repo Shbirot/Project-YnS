@@ -2,6 +2,9 @@ extends "res://tests/robot/logic_test_case.gd"
 
 const MockSteam = preload("res://tests/robot/mocks/mock_steam.gd")
 
+func get_name() -> String:
+	return "SteamManager"
+
 func run_case():
 	# --- Setup ---
 	var scene_tree = Engine.get_main_loop()
@@ -35,7 +38,7 @@ func run_case():
 
 	# Test unlock_achievement
 	steam_manager.unlock_achievement("test_achievement")
-	assert_true(mock_steam.get_achievement("test_achievement"), "The achievement should be unlocked")
+	assert_true(mock_steam.getAchievement("test_achievement"), "The achievement should be unlocked")
 
 	# Test set_and_get_stat
 	steam_manager.set_stat("test_stat", 42)
@@ -44,3 +47,5 @@ func run_case():
 	# --- Teardown ---
 	if is_instance_valid(mock_steam):
 		mock_steam.queue_free()
+
+	log_summary("Steam Manager all tests passed")

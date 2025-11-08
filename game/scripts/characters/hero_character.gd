@@ -21,8 +21,7 @@ var _touch_origin := Vector2.ZERO
 var _touch_vector := Vector2.ZERO
 var _ammunition : WeaponAmmunition
 var _damage_type := "physical"
-var _attributes_manager
-var _attributes_warned := false
+var _game_controller
 
 @onready var fire_timer : Timer = _ensure_timer()
 
@@ -38,12 +37,13 @@ func _ensure_timer() -> Timer:
 
 func _ready() -> void:
 	super._ready()
-	_attributes_manager = SceneTreeUtil.get_manager("attributes_manager")
-	_sync_attributes()
+	_game_controller = SceneTreeUtil.get_autoload("GameController")
 	set_process_unhandled_input(true)
 	set_fire_interval_value(fire_interval)
 	fire_timer.timeout.connect(_fire_projectile)
 	fire_timer.start()
+	# Report stats to GameController once at the end after all initialization
+	_report_stats_to_game_controller()
 	Log.info("HeroCharacter ready: %s" % _log_name())
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -117,21 +117,18 @@ func set_fire_interval_value(value: float) -> void:
 		fire_timer.wait_time = fire_interval
 		if not fire_timer.is_stopped():
 			fire_timer.start()
-	_sync_attributes()
 
 func set_damage_type(damage_type: String) -> void:
 	_damage_type = damage_type
 	Log.debug("HeroCharacter %s damage_type=%s" % [_log_name(), damage_type])
 
-func _sync_attributes() -> void:
-	if _attributes_manager == null:
-		_attributes_manager = SceneTreeUtil.get_manager("attributes_manager")
-		if _attributes_manager == null:
-			if not _attributes_warned:
-				Log.warn("HeroCharacter: attributes manager not set for %s" % _log_name())
-				_attributes_warned = true
-			return
-	_attributes_manager.set_attribute("hp", max_health)
-	_attributes_manager.set_attribute("fire_rate", fire_interval)
-	_attributes_manager.set_attribute("projectile_speed", projectile_speed)
-	_attributes_warned = false
+func _report_stats_to_game_controller() -> void:
+	if _game_controller == null:
+		Log.warn("HeroCharacter: GameController not available for %s" % _log_name())
+		return
+	# Report current stats through GameController's API
+	_game_controller.update_hero_attributes({
+		"hp": max_health,
+		"fire_rate": fire_interval,
+		"projectile_speed": projectile_speed,
+	})

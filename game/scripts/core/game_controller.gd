@@ -19,6 +19,11 @@ var _damage_manager : DamageNumberManager
 var _selected_hero_id := ""
 var _selected_weapon_id := ""
 
+func _ready() -> void:
+	# Initialize immediately when GameController loads (before main scene)
+	# This ensures AttributesManager is available for any characters that load
+	initialize()
+
 func initialize() -> void:
 	if _initialized:
 		return
@@ -36,13 +41,7 @@ func initialize() -> void:
 		_api_manager.start(self)
 	_attributes_manager = AttributesManager.new()
 	add_child(_attributes_manager)
-	_attributes_manager.reset({
-		"hp": 100.0,
-		"fire_rate": 0.6,
-		"projectile_speed": 700.0,
-		"crit_rate": 0.05,
-		"crit_multiplier": 1.35,
-	})
+	# AttributesManager initializes with defaults, no need to reset
 	_damage_manager = DamageNumberManager.new()
 	add_child(_damage_manager)
 	_initialized = true
@@ -192,3 +191,25 @@ func get_attributes_manager() -> AttributesManager:
 
 func get_damage_number_manager() -> DamageNumberManager:
 	return _damage_manager
+
+# Attributes API - GameController is the gatekeeper for AttributesManager
+func set_attribute(key: String, value) -> void:
+	if _attributes_manager:
+		_attributes_manager.set_attribute(key, value)
+
+func get_attribute(key: String, default = null):
+	if _attributes_manager:
+		return _attributes_manager.get_attribute(key, default)
+	return default
+
+func get_all_attributes() -> Dictionary:
+	if _attributes_manager:
+		return _attributes_manager.get_all_attributes()
+	return {}
+
+func update_hero_attributes(stats: Dictionary) -> void:
+	if _attributes_manager == null:
+		Log.warn("GameController: cannot update attributes (manager not ready)")
+		return
+	for key in stats:
+		_attributes_manager.set_attribute(key, stats[key])

@@ -13,5 +13,7 @@ func _bootstrap() -> void:
 	if controller == null:
 		push_warning("GameController not found; cannot boot.")
 		return
-	controller.initialize()
-	controller.start_main_scene()
+	# GameController now initializes itself in _ready(), so initialization is already complete
+	# Main scene is loaded automatically via project.godot run/main_scene setting
+	# This function is now just a hook for future post-initialization logic
+	controller.initialize()  # Idempotent, safe to call

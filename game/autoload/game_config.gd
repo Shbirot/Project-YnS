@@ -8,16 +8,19 @@ var settings := {
 		"enemy_spawn_rate": 1.4,
 		"xp_multiplier": 1.0,
 		"analytics_enabled": false,
+		"steam_enabled": false,
 	},
 	"stage": {
 		"enemy_spawn_rate": 1.1,
 		"xp_multiplier": 1.0,
 		"analytics_enabled": false,
+		"steam_enabled": false,
 	},
 	"prod": {
 		"enemy_spawn_rate": 1.0,
 		"xp_multiplier": 1.1,
 		"analytics_enabled": true,
+		"steam_enabled": true,
 	},
 }
 

@@ -1,19 +1,24 @@
-extends Area2D
+extends StaticEntity
 class_name Collectible
-
-const Log = preload("res://scripts/utils/log_helper.gd")
 
 const InteractionSystem = preload("res://scripts/systems/interaction_system.gd")
 
-@export var display_name := "Collectible"
 @export var pickup_sound : AudioStream
-var is_enabled := true
-
-@onready var sprite : Sprite2D = $Sprite2D
 
 func _ready() -> void:
-	monitoring = true
-	body_entered.connect(_on_body_entered)
+	# Set properties for collectibles
+	physics_mode = PhysicsMode.STATIC
+	collision_mode = CollisionMode.SENSOR
+	movement_mode = MovementMode.STATIC
+	interaction_type = InteractionType.COLLECTIBLE
+	render_tier = RenderTier.IMPORTANT
+
+	super._ready()
+
+	# Configure interaction area for collectible behavior
+	if interaction_area:
+		interaction_area.monitoring = true
+		interaction_area.body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body: Node) -> void:
 	if not is_enabled:
@@ -27,6 +32,7 @@ func apply_effect(_actor) -> void:
 
 func _disable() -> void:
 	is_enabled = false
-	monitoring = false
+	if interaction_area:
+		interaction_area.monitoring = false
 	visible = false
 	set_process(false)

@@ -28,12 +28,9 @@ static func _calculate_final_damage(base_damage: float) -> Dictionary:
 	var crit_rate := 0.05
 	var crit_multiplier := 1.35
 	if controller:
-		var attrs = controller.get_attributes_manager()
-		if attrs:
-			crit_rate = attrs.get_attribute("crit_rate", crit_rate)
-			crit_multiplier = attrs.get_attribute("crit_multiplier", crit_multiplier)
-		else:
-			Log.warn("DamageSystem: attributes manager unavailable")
+		# Access attributes through GameController's API (encapsulation)
+		crit_rate = controller.get_attribute("crit_rate", crit_rate)
+		crit_multiplier = controller.get_attribute("crit_multiplier", crit_multiplier)
 	else:
 		Log.warn("DamageSystem: controller missing during damage calculation")
 	return Calc.roll_damage(base_damage, crit_rate, crit_multiplier)

@@ -31,11 +31,11 @@ func _refresh() -> void:
 	if controller == null:
 		Log.warn("AttributeWindow: controller missing")
 		return
-	var manager = controller.get_attributes_manager()
-	if manager == null:
-		Log.warn("AttributeWindow: attributes manager missing")
+	# Access attributes through GameController's API (encapsulation)
+	var attrs: Dictionary = controller.get_all_attributes()
+	if attrs.is_empty():
+		Log.warn("AttributeWindow: no attributes available")
 		return
-	var attrs: Dictionary = manager.get_all_attributes()
 	var keys: Array = attrs.keys()
 	keys.sort()
 	for key in keys:

@@ -1,4 +1,4 @@
-extends MovableGameObject
+extends PhysicsEntity
 class_name Character
 
 const NodeUtil = preload("res://scripts/utils/node_util.gd")
@@ -13,6 +13,17 @@ signal died
 var _current_health := 0
 
 func _ready() -> void:
+	# Set default properties for characters
+	physics_mode = PhysicsMode.KINEMATIC
+	collision_mode = CollisionMode.PHYSICAL
+	movement_mode = MovementMode.VELOCITY
+	render_tier = RenderTier.CRITICAL
+
+	# Store HP in stats dictionary
+	stats["max_health"] = max_health
+	stats["base_damage"] = base_damage
+	stats["team"] = team
+
 	super._ready()
 	_current_health = max_health
 	health_changed.emit(_current_health, max_health)

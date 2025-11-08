@@ -21,8 +21,21 @@ signal steam_init_failed
 
 
 var SteamAPI = null
+var _steam_enabled: bool = false
+var _steam_initialized: bool = false
 
 func _ready():
+	# Check if Steam is enabled for this environment (dev/stage/prod)
+	# If SteamAPI is already set (testing), always enable
+	if SteamAPI != null:
+		_steam_enabled = true
+	else:
+		_steam_enabled = GameConfig.get_setting("steam_enabled", false)
+
+	if not _steam_enabled:
+		# Steam is disabled for this environment - skip initialization silently
+		return
+
 	# Allow injecting a mock for testing
 	if SteamAPI == null:
 		if Engine.has_singleton("Steam"):
@@ -30,19 +43,23 @@ func _ready():
 		else:
 			# In a test environment, the test script is responsible for injecting a mock.
 			# In a real game, this means Steam isn't available.
+			_steam_initialized = false
 			print("Steam singleton not found.")
 			emit_signal("steam_init_failed")
 			return
 
 	if not SteamAPI.isSteamRunning():
+		_steam_initialized = false
 		print("Steam is not running.")
 		emit_signal("steam_init_failed")
 		return
 
 	if SteamAPI.steamInit():
+		_steam_initialized = true
 		print("Steamworks API Initialized.")
 		emit_signal("steam_initialized")
 	else:
+		_steam_initialized = false
 		print("Failed to initialize Steamworks API.")
 		emit_signal("steam_init_failed")
 
@@ -53,7 +70,7 @@ func is_steam_initialized() -> bool:
 	"""
 	Checks if the Steamworks API is initialized.
 	"""
-	return SteamAPI != null and SteamAPI.isSteamRunning() and SteamAPI.steamInit()
+	return _steam_enabled and _steam_initialized
 
 
 func get_player_name() -> String:

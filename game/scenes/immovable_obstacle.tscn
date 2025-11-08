@@ -4,11 +4,9 @@
 [ext_resource type="Texture2D" path="res://assets/rock_obstacle.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="1"]
-extents = Vector2(32, 32)
+size = Vector2(64, 64)
 
-[node name="Obstacle" type="CharacterBody2D"]
-collision_layer = 4
-collision_mask = 0
+[node name="Obstacle" type="Node2D"]
 script = ExtResource("1")
 block_square_size = 64
 persistent = false
@@ -16,5 +14,9 @@ persistent = false
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2")
 
-[node name="Blocker" type="CollisionShape2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("1")
