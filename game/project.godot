@@ -13,7 +13,7 @@ config_version=5
 config/name="Nightfall Survivor"
 config/description="Top-down arena roguelite built for mobile."
 run/main_scene="res://scenes/main.tscn"
-config/features=PackedStringArray("4.2")
+config/features=PackedStringArray("4.5")
 boot_splash/bg_color=Color(0.105882, 0.121569, 0.223529, 1)
 config/icon="res://assets/icons/app_icon.svg"
 
