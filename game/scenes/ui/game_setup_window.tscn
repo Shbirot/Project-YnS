@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/game_setup_window.gd" id="1"]
+
+[node name="GameSetupWindow" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -240.0
+offset_right = 360.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+window_name = "game_setup"
+starts_visible = false
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "Choose your loadout"
+horizontal_alignment = 1
+
+[node name="Lists" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 24
+size_flags_vertical = 3
+
+[node name="Weapons" type="VBoxContainer" parent="Panel/VBox/Lists"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WeaponLabel" type="Label" parent="Panel/VBox/Lists/Weapons"]
+layout_mode = 2
+text = "Weapons"
+horizontal_alignment = 1
+
+[node name="WeaponList" type="ItemList" parent="Panel/VBox/Lists/Weapons"]
+layout_mode = 3
+size_flags_vertical = 3
+select_mode = 1
+icon_mode = 1
+fixed_icon_size = Vector2(64, 64)
+
+[node name="Heroes" type="VBoxContainer" parent="Panel/VBox/Lists"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeroLabel" type="Label" parent="Panel/VBox/Lists/Heroes"]
+layout_mode = 2
+text = "Heroes"
+horizontal_alignment = 1
+
+[node name="HeroList" type="ItemList" parent="Panel/VBox/Lists/Heroes"]
+layout_mode = 3
+size_flags_vertical = 3
+select_mode = 1
+icon_mode = 1
+fixed_icon_size = Vector2(64, 64)
+
+[node name="Footer" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="StatusLabel" type="Label" parent="Panel/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Select a weapon • Select a hero"
+vertical_alignment = 1
+
+[node name="StartButton" type="Button" parent="Panel/VBox/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 64)
+size_flags_horizontal = 1
+text = "Start"
+disabled = true
