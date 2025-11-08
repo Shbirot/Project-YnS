@@ -13,6 +13,11 @@ Infrastructure scaffolding for a Vampire Survivors–style mobile game built wit
 - **Persistence-ready**: `PersistenceManager` snapshots hero state (position, coins, health, future progression) every 30s to `user://persistence.json` and restores it on startup—perfect for keeping dev adjustments or future player profiles in sync.
 - **Camera-ready**: `CameraController` keeps the hero centered with smooth scrolling and world bounds so the map stays static while the view tracks action.
 - **Obstacle-friendly**: `ImmovableObject` + debug key `O` let you drop blocking/non-blocking props (stones, trees, bushes) with configurable footprints so encounters feel natural without ad-hoc collision hacks.
+- **Boot chain**: `BootLoader` performs startup preflight steps, then hands control to `GameController`, which centralizes core services (logger, config, persistence) and exposes the lightweight TCP API manager for automation-friendly system commands.
+- **Weaponized projectiles**: the new `Weapon` + `WeaponAmmunition` layer feeds advanced projectile types (spark shots, line-of-sight tornados, explosive fireballs, dynamite charges, lightning bounces) with configurable on-fire/on-impact/tail effects.
+- **Attributes & combat feedback**: `AttributesManager` tracks HP/fire rate/projectile speed/crit stats, the damage system rolls crits, and `DamageNumberManager` splashes colored numbers (physical, elemental, crit variants) at hit positions for instant readability.
+- **Data-driven factories**: edit `game/config/data/objects/catalog.json` to describe heroes, monsters, projectiles, and weapons; the `ObjectCatalog` autoload consumes that file directly at runtime so no external tooling is required.
+- **Menu-driven launch**: startup and loadout windows pause the simulation until you pick a hero/weapon combo, then resume play with the chosen stats—perfect for testing multiple builds quickly.
 
 ## Repo layout
 
@@ -68,7 +73,22 @@ Set `REMOTE_DEBUG=1` to have `run_dev.sh desktop` pass `--remote-debug tcp://127
 - Tuning knobs live in `game/config/settings/defaults.json` and per-environment overrides in `game/config/settings/{dev,stage,prod}.json`. Query them anywhere with `ConfigManager.get_value("hero.move_speed")`.
 - Runtime logs stream to stdout and to `user://logs/nightfall_YYYYMMDD.log` (rotating daily) via the `Logger` autoload.
 
-5. **CI/CD**
+5. **Reference diagrams**
+   - See `docs/block_diagram.md` for a high-level component diagram that mirrors the README.
+   - `docs/object_factory.md` documents the JSON→Godot factory workflow.
+
+6. **Headless sanity checks**
+   - Install `xvfb` on your host (`sudo apt install xvfb`) so Godot can run without an attached display.
+   - Run `./scripts/check_game.sh` to lint GDScript (via `gdlint`) and execute `godot --check-only` under `xvfb-run` before opening the editor or pushing to CI.
+
+7. **Object catalog (optional but recommended)**
+   - Author specs in `game/config/data/objects/catalog.json`. Each top-level key (`hero`, `monster`, `projectile`, `weapon`, etc.) maps ids to dictionaries describing their stats, scenes, and metadata.
+   - The `/root/ObjectCatalog` autoload loads that JSON directly; call helpers such as `ObjectCatalog.create_hero("hero_arcane")` or `ObjectCatalog.list_entries("weapon")` from anywhere in-game.
+
+8. **In-game controls**
+   - Bottom-right HUD buttons pause the game. “Pause” opens the pause menu (resume/restart/exit) while “Attributes” opens the live attribute inspector powered by `AttributesManager`.
+
+9. **CI/CD**
    - Pushes to `develop`/`main` trigger `.github/workflows/ci.yml`, running desktop + stage exports inside a containerized Godot build.
 
 ## Environment profiles
@@ -80,6 +100,21 @@ Environment | Purpose | Differences
 `prod` | Play Store builds | spawn buffs, analytics enabled, release keystore required
 
 `GameConfig` chooses the profile via (1) `custom_features` inside export presets (`env.dev`, `env.stage`, `env.prod`) or (2) the `NIGHTFALL_ENV` env var for local runs.
+
+## Weapons & Projectiles
+
+- **Weapons** (`scripts/weapons/weapon.gd`) act as non-visual resources that bundle firing rate, ammo configuration, and projectile scenes. The hero now equips `resources/weapons/basic_wand.tres`, which overrides the old fire interval/projectile settings.
+- **WeaponAmmunition** (`scripts/weapons/ammunition_base.gd`) lays the groundwork for projectile, melee, and environmental damage types. Projectile ammunition is hooked up today; melee/environmental slots are placeholders for future systems.
+- **Projectile families** (all under `game/scenes/projectiles/`):
+  - *Magic Spark*: blue sparkles with tail + impact glint (good for wands).
+  - *Tornado beam*: line-of-sight shot that pierces multiple enemies.
+  - *Fireball*: explodes, spawns a lingering damage field with custom impact effect.
+  - *Dynamite*: slow-moving stick with burning tail.
+  - *Lightning bolt*: bounces across nearby enemies several times.
+
+## API Manager
+
+- `ApiManager` (`scripts/core/api_manager.gd`) opens a tiny TCP server on port `6969` and accepts commands such as `pause`, `resume`, `reset`, `list_components`, `show_window <name>`, and `hide_window <name>`. It forwards requests to `GameController`, which exposes placeholder handlers. Connect via `nc localhost 6969` during development for quick automation.
 
 ## Next steps / customization ideas
 1. Flesh out ability/weapon systems under `game/scripts/` and add upgrade data in `config/data/`.
