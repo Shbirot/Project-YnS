@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1762571097
+::res://::1762574140
 default_env.tres::Environment::-1::1762515004::0::1::::<><>::
 export_presets.cfg::TextFile::-1::1762515211::0::1::::<><>::
 ::res://android/::1762517005
@@ -157,3 +157,12 @@ environmental_ammunition.gd::GDScript::-1::1762564267::0::1::::EnvironmentalAmmu
 melee_ammunition.gd::GDScript::-1::1762564260::0::1::::MeleeAmmunition<>Resource<>::
 projectile_ammunition.gd::GDScript::-1::1762569121::0::1::::ProjectileAmmunition<>Resource<>::
 weapon.gd::GDScript::-1::1762566575::0::1::::Weapon<>Resource<>::
+::res://tests/::1762572263
+::res://tests/robot/::1762572454
+logic_test_case.gd::GDScript::-1::1762572421::0::1::::LogicTestCase<>RefCounted<>::
+logic_test_runner.gd::GDScript::-1::1762574074::0::1::::<>SceneTree<>::
+::res://tests/robot/cases/::1762572386
+attributes_manager_test.gd::GDScript::-1::1762572338::0::1::::<>RefCounted<>::
+damage_system_test.gd::GDScript::-1::1762572375::0::1::::<>RefCounted<>::
+game_controller_test.gd::GDScript::-1::1762572434::0::1::::<>RefCounted<>::
+weapon_application_test.gd::GDScript::-1::1762572364::0::1::::<>RefCounted<>::
