@@ -25,9 +25,14 @@ func initialize() -> void:
 	_config_manager = _get_singleton("ConfigManager")
 	_persistence_manager = _get_singleton("PersistenceManager")
 	_setup_menu_layer()
-	_api_manager = ApiManager.new()
-	add_child(_api_manager)
-	_api_manager.start(self)
+	var disable_api := false
+	if OS.has_environment("DISABLE_API_MANAGER"):
+		var value = OS.get_environment("DISABLE_API_MANAGER")
+		disable_api = value != ""
+	if not disable_api:
+		_api_manager = ApiManager.new()
+		add_child(_api_manager)
+		_api_manager.start(self)
 	_attributes_manager = AttributesManager.new()
 	add_child(_attributes_manager)
 	_attributes_manager.reset({
@@ -45,6 +50,9 @@ func is_initialized() -> bool:
 	return _initialized
 
 func start_main_scene() -> void:
+	if not is_inside_tree():
+		Log.warn("GameController: cannot load main scene (not inside tree)")
+		return
 	var packed: PackedScene = load("res://scenes/main.tscn")
 	if packed:
 		Log.info("GameController: loading main scene")
@@ -118,6 +126,9 @@ func get_loadout() -> Dictionary:
 	}
 
 func apply_loadout() -> void:
+	if not is_inside_tree():
+		Log.warn("GameController: cannot apply loadout (not inside tree)")
+		return
 	var scene = get_tree().current_scene
 	if scene and scene.has_method("apply_loadout"):
 		Log.info("GameController: applying loadout hero=%s weapon=%s" % [_selected_hero_id, _selected_weapon_id])
@@ -126,20 +137,41 @@ func apply_loadout() -> void:
 		Log.warn("GameController: current scene missing apply_loadout")
 
 func pause_game() -> void:
+	if not is_inside_tree():
+		Log.warn("GameController: cannot pause game (not inside tree)")
+		return
+	var tree = get_tree()
+	if tree == null:
+		Log.warn("GameController: cannot pause game (no scene tree)")
+		return
 	Log.info("GameController: pausing game")
-	get_tree().paused = true
+	tree.paused = true
 
 func resume_game() -> void:
+	if not is_inside_tree():
+		Log.warn("GameController: cannot resume game (not inside tree)")
+		return
+	var tree = get_tree()
+	if tree == null:
+		Log.warn("GameController: cannot resume game (no scene tree)")
+		return
 	Log.info("GameController: resuming game")
-	get_tree().paused = false
+	tree.paused = false
 
 func reset_game() -> void:
+	if not is_inside_tree():
+		Log.warn("GameController: cannot reset game (not inside tree)")
+		return
+	var tree = get_tree()
+	if tree == null:
+		Log.warn("GameController: cannot reset game (no scene tree)")
+		return
 	Log.info("GameController: resetting game")
-	var current = get_tree().current_scene
+	var current = tree.current_scene
 	if current and current.scene_file_path != "":
 		var packed = ResourceLoader.load(current.scene_file_path)
 		if packed:
-			get_tree().change_scene_to_packed(packed)
+			tree.change_scene_to_packed(packed)
 		else:
 			Log.error("GameController: failed to reload scene %s" % current.scene_file_path)
 	else:
@@ -160,9 +192,14 @@ func get_attributes_manager() -> AttributesManager:
 func get_damage_number_manager() -> DamageNumberManager:
 	return _damage_manager
 
-func _get_singleton(path: String):
-	var full_path = "/root/%s" % path
-	var node = get_node_or_null(full_path)
-	if node == null:
-		Log.warn("GameController: singleton %s not found" % path)
-	return node
+func _get_singleton(name: String):
+	var loop = Engine.get_main_loop()
+	if loop is SceneTree:
+		var root = loop.get_root()
+		if root:
+			var node = root.get_node_or_null(name)
+			if node == null:
+				Log.warn("GameController: singleton %s not found" % name)
+			return node
+	Log.warn("GameController: unable to access singleton %s (scene tree unavailable)" % name)
+	return null

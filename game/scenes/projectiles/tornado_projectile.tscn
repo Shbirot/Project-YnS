@@ -17,7 +17,7 @@ on_impact_effect = ExtResource("3")
 monitoring = true
 monitorable = true
 
-direction = Vector2.RIGHT
+direction = Vector2(1, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")

@@ -2,34 +2,59 @@ extends SceneTree
 
 const TEST_DIR := "res://tests/robot/cases"
 const BASE_TEST := preload("res://tests/robot/logic_test_case.gd")
+const AUTOLOAD_SPECS := [
+	{"name": "Logger", "path": "res://autoload/logger.gd"},
+	{"name": "ConfigManager", "path": "res://autoload/config_manager.gd"},
+	{"name": "GameConfig", "path": "res://autoload/game_config.gd"},
+	{"name": "PersistenceManager", "path": "res://autoload/persistence_manager.gd"},
+	{"name": "ObjectCatalog", "path": "res://scripts/factories/object_catalog.gd"},
+	{"name": "GameController", "path": "res://scripts/core/game_controller.gd", "initialize": true},
+]
 
 var _results := []
 var _summary := {"total": 0, "failed": 0}
 var _output_path := "user://logic_results.json"
+var _skip_ui := OS.has_environment("SKIP_UI_TESTS")
+var _case_filters : Array = []
+var _matched_cases := {}
+var _verbose := OS.has_environment("LOGIC_TEST_VERBOSE")
 
 func _initialize() -> void:
+	_install_autoloads()
 	_disable_file_logging()
+	_disable_api_server()
 	_parse_args()
-	_setup_environment()
 	_run_all_cases()
 	_write_results()
 	var exit_code = 1 if _summary.failed > 0 else 0
 	quit(exit_code)
 
 func _disable_file_logging() -> void:
-	var logger = Engine.get_main_loop().root.get_node_or_null("Logger")
-	if logger and logger.has_variable("_file_logging_enabled"):
+	var root = get_root()
+	if root == null:
+		return
+	var logger = root.get_node_or_null("Logger")
+	if logger and "_file_logging_enabled" in logger:
 		logger._file_logging_enabled = false
 
 func _parse_args() -> void:
 	for arg in OS.get_cmdline_args():
 		if arg.begins_with("--result-file="):
 			_output_path = arg.split("=", true, 1)[1]
+		elif arg.begins_with("--case="):
+			var filter = arg.split("=", true, 1)[1]
+			if filter != "":
+				_case_filters.append(filter)
 
-func _setup_environment() -> void:
-	var controller = Engine.get_main_loop().root.get_node_or_null("GameController")
-	if controller:
-		controller.initialize()
+func _disable_api_server() -> void:
+	var root = get_root()
+	if root == null:
+		return
+	var controller = root.get_node_or_null("GameController")
+	if controller and "_api_manager" in controller:
+		var api = controller._api_manager
+		if api and api.has_method("stop"):
+			api.stop()
 
 func _run_all_cases() -> void:
 	var dir = DirAccess.open(TEST_DIR)
@@ -43,8 +68,12 @@ func _run_all_cases() -> void:
 			break
 		if dir.current_is_dir() or not file.ends_with(".gd"):
 			continue
-		_run_case(TEST_DIR + "/" + file)
+		var path = TEST_DIR + "/" + file
+		if not _should_run_case(path):
+			continue
+		_run_case(path)
 	dir.list_dir_end()
+	_validate_case_filters()
 
 func _run_case(path: String) -> void:
 	var script = load(path)
@@ -59,13 +88,30 @@ func _run_case(path: String) -> void:
 		_summary.total += 1
 		_summary.failed += 1
 		return
+	_mark_case_ran(path)
+	if _skip_ui and instance.requires_ui():
+		_results.append({"case": path, "passed": true, "skipped": true, "case_file": path, "message": "Skipped due to UI requirements"})
+		return
 	var case_results = instance.run()
+	var summary_lines = instance.get_summary_lines()
 	for entry in case_results:
 		_summary.total += 1
 		if not entry.get("passed", false):
 			_summary.failed += 1
 		entry["case_file"] = path
 		_results.append(entry)
+	if summary_lines.size() > 0:
+		var summary_text = "; ".join(summary_lines)
+		var summary_entry = {
+			"case": "%s summary" % instance.get_name(),
+			"case_file": path,
+			"summary": summary_text,
+			"passed": true,
+			"summary_only": true,
+		}
+		_results.append(summary_entry)
+		if _verbose:
+			print("[LogicTestRunner] %s -> %s" % [instance.get_name(), summary_text])
 
 func _write_results() -> void:
 	var payload = {
@@ -80,3 +126,47 @@ func _write_results() -> void:
 		file.store_string(text)
 	else:
 		push_warning("Unable to write logic test results to %s" % _output_path)
+
+func _install_autoloads() -> void:
+	var root = get_root()
+	if root == null:
+		push_warning("LogicTestRunner: no root viewport available")
+		return
+	for spec in AUTOLOAD_SPECS:
+		if root.get_node_or_null(spec.name):
+			continue
+		var script = load(spec.path)
+		if script == null:
+			push_warning("LogicTestRunner: missing autoload script %s" % spec.path)
+			continue
+		var node = script.new()
+		if node == null:
+			push_warning("LogicTestRunner: unable to instantiate %s" % spec.path)
+			continue
+		node.name = spec.name
+		root.add_child(node)
+	for spec in AUTOLOAD_SPECS:
+		if not spec.get("initialize", false):
+			continue
+		var instance = root.get_node_or_null(spec.name)
+		if instance and instance.has_method("initialize"):
+			instance.initialize()
+
+func _should_run_case(path: String) -> bool:
+	if _case_filters.is_empty():
+		return true
+	return _case_filters.has(path)
+
+func _mark_case_ran(path: String) -> void:
+	if _case_filters.is_empty():
+		return
+	_matched_cases[path] = true
+
+func _validate_case_filters() -> void:
+	if _case_filters.is_empty():
+		return
+	for filter in _case_filters:
+		if not _matched_cases.get(filter, false):
+			_results.append({"case": filter, "passed": false, "message": "Specified case not found"})
+			_summary.total += 1
+			_summary.failed += 1

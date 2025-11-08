@@ -62,25 +62,41 @@ func _dispatch_command(peer, command) -> void:
 		arg = tokens[1]
 	match verb:
 		"pause":
-			_game_controller.call_deferred("pause_game")
+			_invoke_controller("pause_game")
 			_reply(peer, "OK: paused")
 		"resume":
-			_game_controller.call_deferred("resume_game")
+			_invoke_controller("resume_game")
 			_reply(peer, "OK: resumed")
 		"reset":
-			_game_controller.call_deferred("reset_game")
+			_invoke_controller("reset_game")
 			_reply(peer, "OK: resetting")
 		"list_components":
-			_game_controller.call_deferred("log_component_stats")
+			_invoke_controller("log_component_stats")
 			_reply(peer, "OK: logging components")
 		"show_window":
-			_game_controller.call_deferred("show_window", arg)
+			_invoke_controller("show_window", [arg])
 			_reply(peer, "OK: showing %s" % arg)
 		"hide_window":
-			_game_controller.call_deferred("hide_window", arg)
+			_invoke_controller("hide_window", [arg])
 			_reply(peer, "OK: hiding %s" % arg)
 		_:
 			_reply(peer, "ERR: unknown command '%s'" % command)
 
 func _reply(peer, message) -> void:
 	peer.put_utf8_string(message + "\n")
+
+func _invoke_controller(method: String, args: Array = []) -> void:
+	if _game_controller == null or not _game_controller.has_method(method):
+		return
+	if _game_controller.is_inside_tree():
+		match args.size():
+			0:
+				_game_controller.call_deferred(method)
+			1:
+				_game_controller.call_deferred(method, args[0])
+			2:
+				_game_controller.call_deferred(method, args[0], args[1])
+			_:
+				_game_controller.callv(method, args)
+	else:
+		_game_controller.callv(method, args)
