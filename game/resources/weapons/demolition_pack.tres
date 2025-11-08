@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/weapon.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/dynamite_projectile.tscn" id="2"]
+[ext_resource type="Resource" path="res://resources/weapons/dynamite_ammunition.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+weapon_name = "Demolition Pack"
+description = "Dynamite sticks with hefty impact."
+firing_rate = 1.8
+projectile_scene = ExtResource("2")
+ammunition = ExtResource("3")
+projectile_speed_override = 360.0
+damage_override = 36
+damage_type = "physical"

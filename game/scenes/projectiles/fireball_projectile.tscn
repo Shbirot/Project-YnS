@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/projectiles/projectile_explosive.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/projectile.svg" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/effects/fire_tail.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/effects/fire_explosion.tscn" id="4"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 14.0
+
+[node name="Fireball" type="Area2D"]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1")
+tail_effect = ExtResource("3")
+on_impact_effect = ExtResource("4")
+lingering_duration = 2.0
+monitoring = true
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+modulate = Color(1, 0.5, 0.1, 1)
+scale = Vector2(0.8, 0.8)

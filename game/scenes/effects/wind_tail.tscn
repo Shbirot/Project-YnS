@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/projectile.svg" id="1"]
+
+[node name="WindTail" type="Sprite2D"]
+texture = ExtResource("1")
+modulate = Color(0.4, 0.95, 0.95, 0.7)
+scale = Vector2(0.25, 1.4)
+rotation = -0.4
