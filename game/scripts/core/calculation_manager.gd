@@ -38,10 +38,11 @@ static func advance_position(position: Vector2, direction: Vector2, speed: float
 	return position + velocity_from_direction(direction, speed) * delta
 
 static func clamp_to_rect(position: Vector2, rect: Rect2, half_extent: Vector2 = Vector2.ZERO) -> Vector2:
-	var min_x = rect.position.x + half_extent.x
-	var max_x = rect.position.x + rect.size.x - half_extent.x
-	var min_y = rect.position.y + half_extent.y
-	var max_y = rect.position.y + rect.size.y - half_extent.y
+	var valid_rect = rect.abs()
+	var min_x = valid_rect.position.x + half_extent.x
+	var max_x = valid_rect.position.x + valid_rect.size.x - half_extent.x
+	var min_y = valid_rect.position.y + half_extent.y
+	var max_y = valid_rect.position.y + valid_rect.size.y - half_extent.y
 	return Vector2(
 		clamp(position.x, min_x, max_x),
 		clamp(position.y, min_y, max_y)
