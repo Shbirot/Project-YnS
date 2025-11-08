@@ -40,3 +40,6 @@ Thumbs.db
 log.html
 output.xml
 report.html
+*.uid
+game/.godot/shader_cache/
+game/addons/
