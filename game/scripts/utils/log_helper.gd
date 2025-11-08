@@ -3,11 +3,11 @@ extends RefCounted
 class_name Log
 
 static func _get_logger():
-	var loop = Engine.get_main_loop()
-	if loop and loop is SceneTree:
-		var root = loop.current_scene
-		if root and root.has_node("/root/Logger"):
-			return root.get_node("/root/Logger")
+	var tree := Engine.get_main_loop()
+	if tree is SceneTree:
+		var root: Node = tree.get_root()
+		if root:
+			return root.get_node_or_null("Logger")
 	return null
 
 static func debug(message: String) -> void:

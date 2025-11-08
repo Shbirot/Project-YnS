@@ -21,7 +21,8 @@ func apply_damage(amount: int, source = null) -> void:
 		return
 	_current_health = max(_current_health - amount, 0)
 	health_changed.emit(_current_health, max_health)
-	Log.debug("%s took %d damage (hp=%d)" % [display_name, amount, _current_health])
+	var source_name = source.display_name if source and "display_name" in source else "<unknown>"
+	Log.debug("%s took %d damage (hp=%d) source=%s" % [display_name, amount, _current_health, source_name])
 	if _current_health <= 0:
 		_emit_death(source)
 
@@ -30,6 +31,7 @@ func heal(amount: int) -> void:
 	health_changed.emit(_current_health, max_health)
 
 func _emit_death(source):
-	Log.warn("%s died (source=%s)" % [display_name, source])
+	var source_name = source.display_name if source and "display_name" in source else "<unknown>"
+	Log.warn("%s died (source=%s)" % [display_name, source_name])
 	died.emit()
 	set_enabled(false)

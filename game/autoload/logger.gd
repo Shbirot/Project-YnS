@@ -6,12 +6,20 @@ const LEVELS = {"debug": "DEBUG", "info": "INFO", "warn": "WARN", "error": "ERRO
 var _current_date := ""
 var _file : FileAccess
 var _log_dir := "user://logs"
+var _file_logging_enabled := OS.get_environment("NIGHTFALL_DISABLE_FILE_LOGS") != "1"
 
 func _ready() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_log_dir))
-	_current_date = _current_date_string()
-	_open_log()
+	if _file_logging_enabled:
+		_ensure_log_dir()
+		_current_date = _current_date_string()
+		_open_log()
 	info("Logger initialized")
+
+func _ensure_log_dir() -> void:
+	var absolute_dir = ProjectSettings.globalize_path(_log_dir)
+	var err = DirAccess.make_dir_recursive_absolute(absolute_dir)
+	if err != OK:
+		push_warning("Logger cannot create log dir %s (err=%d)" % [absolute_dir, err])
 
 func _current_date_string() -> String:
 	var datetime = Time.get_datetime_dict_from_system()
@@ -25,6 +33,8 @@ func _open_log() -> void:
 	var file_path = "%s/nightfall_%s.log" % [_log_dir, _current_date]
 	var absolute_path = ProjectSettings.globalize_path(file_path)
 	_file = FileAccess.open(absolute_path, FileAccess.WRITE_READ)
+	if _file == null:
+		push_warning("Logger cannot open log file at %s" % absolute_path)
 	if _file:
 		_file.seek_end()
 
@@ -40,10 +50,11 @@ func _log_message(level: String, message: String) -> void:
 	var label = LEVELS.get(level.to_lower(), "INFO")
 	var line = "[%s][%s] %s" % [_current_time_string(), label, message]
 	print(line)
-	_ensure_log_file()
-	if _file:
-		_file.store_line(line)
-		_file.flush()
+	if _file_logging_enabled:
+		_ensure_log_file()
+		if _file:
+			_file.store_line(line)
+			_file.flush()
 
 func debug(message: String) -> void:
 	_log_message("debug", message)

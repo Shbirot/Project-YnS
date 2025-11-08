@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/hero.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://3fsigi6d5dau" path="res://assets/hero_pika.svg" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/projectile.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/magic_spark_projectile.tscn" id="3"]
+[ext_resource type="Resource" path="res://resources/weapons/basic_wand.tres" id="4"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 20.0
@@ -11,7 +12,10 @@ radius = 20.0
 collision_layer = 1
 collision_mask = 6
 script = ExtResource("1")
+display_name = "Hero"
+object_id = "hero_player"
 projectile_scene = ExtResource("3")
+equipped_weapon = ExtResource("4")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.6, 0.6)
