@@ -3,6 +3,25 @@ class_name CalculationManager
 
 static var _rng := RandomNumberGenerator.new()
 
+static func get_random_int(min_val: int, max_val: int) -> int:
+	return _rng.randi_range(min_val, max_val)
+
+static func get_random_float(min_val: float, max_val: float) -> float:
+	return _rng.randf_range(min_val, max_val)
+
+static func get_new_uuid() -> String:
+	var bytes = PackedByteArray()
+	bytes.resize(16)
+	for i in range(bytes.size()):
+		bytes[i] = _rng.randi_range(0, 255)
+	return bytes.hex_encode()
+
+static func get_random_string(num_chars: int) -> String:
+	var s = ""
+	for i in range(num_chars):
+		s += char(_rng.randi_range(97, 122))
+	return s
+
 static func velocity_from_direction(direction: Vector2, speed: float) -> Vector2:
 	if direction == Vector2.ZERO or speed == 0.0:
 		return Vector2.ZERO
