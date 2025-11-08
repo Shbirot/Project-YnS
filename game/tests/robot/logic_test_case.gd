@@ -36,6 +36,14 @@ func assert_equal(actual, expected, message: String) -> void:
 func assert_true(condition: bool, message: String) -> void:
 	push_result(condition, message)
 
+func assert_vector_almost_equal(actual: Vector2, expected: Vector2, tolerance: float, message: String) -> void:
+	var passed = actual.distance_to(expected) <= tolerance
+	push_result(passed, message, {
+		"actual": actual,
+		"expected": expected,
+		"tolerance": tolerance,
+	})
+
 func push_result(passed: bool, message: String, extra := {}) -> void:
 	var payload := {
 		"case": message,

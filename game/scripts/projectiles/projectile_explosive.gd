@@ -30,3 +30,11 @@ func _spawn_lingering_field() -> void:
 	field.damage = damage * 0.4
 	field.duration = lingering_duration
 	get_tree().current_scene.add_child(field)
+
+func debug_damage_area(enemies: Array, center: Vector2, radius: float) -> void:
+	for enemy in enemies:
+		if not enemy is Node2D:
+			continue
+		if enemy.global_position.distance_to(center) <= radius:
+			if enemy.has_method("apply_damage"):
+				enemy.apply_damage(damage, self)

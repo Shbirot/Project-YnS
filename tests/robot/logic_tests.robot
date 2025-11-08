@@ -14,6 +14,12 @@ Catalog Spec (Missing Entry)
 Weapon Application
     Run Single Case    ${CASE_DIR}/weapon_application_test.gd
 
+Battle Monitor (Hero Static)
+    Run Single Case    ${CASE_DIR}/battle_monitor_static_test.gd
+
+Battle Monitor (Both Moving)
+    Run Single Case    ${CASE_DIR}/battle_monitor_moving_test.gd
+
 API Manager
     Run Single Case    ${CASE_DIR}/api_manager_test.gd
 
@@ -65,6 +71,12 @@ Attributes Manager
 Attributes Manager (Error Path)
     Run Single Case    ${CASE_DIR}/attributes_manager_error_test.gd
 
+Combat Hero Damage
+    Run Single Case    ${CASE_DIR}/combat_hero_damage_test.gd
+
+Combat Monster Damage
+    Run Single Case    ${CASE_DIR}/combat_monster_damage_test.gd
+
 Visual Game Object
     Run Single Case    ${CASE_DIR}/visual_game_object_test.gd
 
@@ -77,11 +89,23 @@ Damage System
 Damage System (Error Path)
     Run Single Case    ${CASE_DIR}/damage_system_error_test.gd
 
+Projectile LOS Pass-through
+    Run Single Case    ${CASE_DIR}/projectile_los_passthrough_test.gd
+
+Projectile LOS Multi-hit
+    Run Single Case    ${CASE_DIR}/projectile_los_damage_all_test.gd
+
+Projectile AOE Damage
+    Run Single Case    ${CASE_DIR}/projectile_aoe_damage_test.gd
+
 Weapon Ammunition
     Run Single Case    ${CASE_DIR}/weapon_ammunition_test.gd
 
 Weapon Ammunition (Error Path)
     Run Single Case    ${CASE_DIR}/weapon_ammunition_error_test.gd
+
+Object Block Area Clamp
+    Run Single Case    ${CASE_DIR}/object_block_area_test.gd
 
 Logger
     Run Single Case    ${CASE_DIR}/logger_test.gd
