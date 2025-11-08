@@ -36,3 +36,7 @@ Thumbs.db
 
 # Godot Android templates
 /game/android/build/
+
+log.html
+output.xml
+report.html
