@@ -12,7 +12,9 @@ func _initialize() -> void:
 	_setup_environment()
 	_run_all_cases()
 	_write_results()
-	var exit_code = _summary.failed == 0 ? 0 : 1
+	var exit_code = 0
+	if _summary.failed > 0:
+		exit_code = 1
 	quit(exit_code)
 
 func _parse_args() -> void:
