@@ -129,6 +129,36 @@ UI Windows
     [Tags]    ui
     Run Single Case    ${CASE_DIR}/ui_windows_test.gd
 
+Calculation Manager (Vector)
+    Run Single Case    ${CASE_DIR}/calculation_manager_vector_test.gd
+
+Calculation Manager (Gameplay)
+    Run Single Case    ${CASE_DIR}/calculation_manager_gameplay_test.gd
+
+Calculation Manager (Random)
+    Run Single Case    ${CASE_DIR}/calculation_manager_random_test.gd
+
+SceneTree Util
+    Run Single Case    ${CASE_DIR}/scene_tree_util_test.gd
+
+Color Util
+    Run Single Case    ${CASE_DIR}/color_util_test.gd
+
+Type Util
+    Run Single Case    ${CASE_DIR}/type_util_test.gd
+
+Combat System
+    Run Single Case    ${CASE_DIR}/combat_system_test.gd
+
+Interaction System
+    Run Single Case    ${CASE_DIR}/interaction_system_test.gd
+
+Camera Controller
+    Run Single Case    ${CASE_DIR}/camera_controller_test.gd
+
+Character
+    Run Single Case    ${CASE_DIR}/character_test.gd
+
 *** Keywords ***
 Run Single Case
     [Arguments]    ${case_path}
