@@ -33,5 +33,5 @@ if [[ $VERBOSE_MODE -eq 1 ]]; then
   export LOGIC_TEST_VERBOSE=1
 fi
 
-echo "[run_tests] Running Robot Framework suite..."
-robot "${ROBOT_ARGS[@]}" tests/robot/logic_tests.robot
+echo "[run_tests] Running Robot Framework suites..."
+robot "${ROBOT_ARGS[@]}" tests/robot/
