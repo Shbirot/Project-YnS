@@ -33,8 +33,14 @@ func assert_equal(actual, expected, message: String) -> void:
 		Log.warn("LogicTest assert failed: %s" % message)
 	push_result_dict(detail)
 
+func assert_eq(actual, expected, message: String) -> void:
+	assert_equal(actual, expected, message)
+
 func assert_true(condition: bool, message: String) -> void:
 	push_result(condition, message)
+
+func assert_false(condition: bool, message: String) -> void:
+	push_result(not condition, message)
 
 func assert_vector_almost_equal(actual: Vector2, expected: Vector2, tolerance: float, message: String) -> void:
 	var passed = actual.distance_to(expected) <= tolerance
@@ -63,7 +69,7 @@ func get_tree_ref() -> SceneTree:
 	return null
 
 func log_summary(message: String) -> void:
-	_summary_lines.append(message)
+	_summary_lines.append(message + "\n")
 
 func get_summary_lines() -> Array:
 	return _summary_lines.duplicate(true)

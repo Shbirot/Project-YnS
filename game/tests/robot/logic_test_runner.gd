@@ -76,30 +76,42 @@ func _run_all_cases() -> void:
 	_validate_case_filters()
 
 func _run_case(path: String) -> void:
+	print("--- [Runner] Attempting to run case: %s" % path)
 	var script = load(path)
 	if script == null:
+		print("--- [Runner] FAILED to load script for case: %s" % path)
 		_results.append({"case": path, "passed": false, "message": "Failed to load case"})
 		_summary.total += 1
 		_summary.failed += 1
 		return
+	
+	print("--- [Runner] Script loaded, instantiating case: %s" % path)
 	var instance = script.new()
 	if not instance is BASE_TEST:
+		print("--- [Runner] FAILED, script does not extend LogicTestCase: %s" % path)
 		_results.append({"case": path, "passed": false, "message": "Case does not extend LogicTestCase"})
 		_summary.total += 1
 		_summary.failed += 1
 		return
+	
 	_mark_case_ran(path)
 	if _skip_ui and instance.requires_ui():
 		_results.append({"case": path, "passed": true, "skipped": true, "case_file": path, "message": "Skipped due to UI requirements"})
 		return
+
+	print("--- [Runner] Executing run() for case: %s" % path)
 	var case_results = instance.run()
+	print("--- [Runner] Finished run() for case: %s" % path)
 	var summary_lines = instance.get_summary_lines()
+	
+	print("--- [Runner] Processing results for case: %s" % path)
 	for entry in case_results:
 		_summary.total += 1
 		if not entry.get("passed", false):
 			_summary.failed += 1
 		entry["case_file"] = path
 		_results.append(entry)
+	
 	if summary_lines.size() > 0:
 		var summary_text = "; ".join(summary_lines)
 		var summary_entry = {
@@ -112,6 +124,7 @@ func _run_case(path: String) -> void:
 		_results.append(summary_entry)
 		if _verbose:
 			print("[LogicTestRunner] %s -> %s" % [instance.get_name(), summary_text])
+	print("--- [Runner] Finished processing case: %s" % path)
 
 func _write_results() -> void:
 	var payload = {
