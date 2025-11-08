@@ -19,3 +19,4 @@ func run_case() -> void:
 	assert_equal(manager.get_attribute("hp", 0), 100.0, "hp modification applied")
 	manager.set_attribute("crit_rate", 0.25)
 	assert_equal(manager.get_attribute("crit_rate", 0), 0.25, "crit rate override works")
+	log_summary("Reset attributes, modified HP, and overrode crit stats to ensure the manager persists numeric changes correctly.")

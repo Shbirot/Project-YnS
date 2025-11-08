@@ -30,3 +30,4 @@ func run_case() -> void:
 	assert_equal(hero.fire_interval, weapon_res.firing_rate, "fire interval transferred")
 	assert_true(hero.projectile_scene != null, "projectile scene assigned")
 	assert_equal(hero.damage_type, "magic_arcane", "damage type propagated")
+	log_summary("Applied basic_wand resource to a hero stub and confirmed firing rate, projectile scene, and damage type transfer.")

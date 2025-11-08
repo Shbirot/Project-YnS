@@ -10,3 +10,4 @@ func run_case() -> void:
 	assert_true(result.has("damage"), "result contains damage")
 	assert_true(result.has("is_crit"), "result contains crit flag")
 	assert_true(result.damage >= 0, "damage non-negative")
+	log_summary("Called DamageSystem._calculate_final_damage and verified the dictionary includes damage output and crit metadata.")

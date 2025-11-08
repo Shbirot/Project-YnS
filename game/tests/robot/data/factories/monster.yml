@@ -1,0 +1,9 @@
+{
+  "id": "test_yaml_monster",
+  "scene": "res://scenes/enemy.tscn",
+  "properties": {
+    "display_name": "YAML Monster",
+    "move_speed": 145.0,
+    "max_health": 123.0
+  }
+}

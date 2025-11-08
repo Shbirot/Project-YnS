@@ -17,6 +17,7 @@ func run_case() -> void:
 	assert_true(controller._windows.has("test_window"), "window registered")
 	controller.hide_window("test_window")
 	controller.unregister_window("test_window")
+	log_summary("Initialized a fresh GameController and verified window registration/show/hide lifecycle works as expected.")
 	controller.queue_free()
 
 func _make_window(name: String):

@@ -1,0 +1,9 @@
+{
+  "id": "test_yaml_hero",
+  "scene": "res://scenes/player.tscn",
+  "properties": {
+    "display_name": "YAML Hero",
+    "move_speed": 275.0,
+    "equipped_weapon": "res://resources/weapons/basic_wand.tres"
+  }
+}

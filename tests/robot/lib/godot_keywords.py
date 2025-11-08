@@ -4,6 +4,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+from robot.libraries.BuiltIn import BuiltIn
+
 class GodotKeywords:
     """Robot Framework keywords for running Godot logic tests."""
 
@@ -14,7 +16,31 @@ class GodotKeywords:
         self.project_path = self.repo_root / "game"
 
     def run_godot_logic_tests(self):
-        """Runs the Godot logic test runner and returns the parsed results."""
+        """Runs the entire Godot logic suite."""
+        return self._invoke_runner()
+
+    def run_godot_logic_case(self, case_path):
+        """Runs a single Godot logic case."""
+        data = self._invoke_runner(extra_args=[f"--case={case_path}"])
+        tests = [t for t in data.get("tests", []) if t.get("case_file") == case_path]
+        if not tests:
+            raise AssertionError(f"No test results returned for {case_path}")
+        case_result = tests[-1]
+        bi = BuiltIn()
+        if case_result.get("skipped"):
+            bi.skip(case_result.get("message", "Case skipped"))
+        if not case_result.get("passed", False):
+            raise AssertionError(
+                "Case failed:\n" + json.dumps(case_result, indent=2)
+            )
+        if os.environ.get("LOGIC_TEST_VERBOSE") and case_result.get("summary"):
+            magenta = "\x1b[35m"
+            reset = "\x1b[0m"
+            summary_block = f"\n[logic] {case_path}:\n{magenta}{case_result['summary']}{reset}\n"
+            bi.log_to_console(summary_block)
+        return case_result
+
+    def _invoke_runner(self, extra_args=None):
         if not self.godot_bin.exists():
             raise AssertionError(f"Godot binary not found at {self.godot_bin}")
         output_dir = Path(tempfile.mkdtemp(prefix="godot-tests-"))
@@ -25,8 +51,9 @@ class GodotKeywords:
         env["GODOT_USER_HOME"] = str(godot_home)
         logs_dir = godot_home / "app_userdata" / "Nightfall Survivor" / "logs"
         logs_dir.mkdir(parents=True, exist_ok=True)
-        # Also set XDG_DATA_HOME so Godot's dir helpers stay inside the sandbox
         env.setdefault("XDG_DATA_HOME", str(self.repo_root / ".godot-data"))
+        env.setdefault("DISABLE_API_MANAGER", "1")
+        env.setdefault("NIGHTFALL_DISABLE_BOOT", "1")
         cmd = [
             str(self.godot_bin),
             "--headless",
@@ -34,8 +61,10 @@ class GodotKeywords:
             str(self.project_path),
             "--script",
             "res://tests/robot/logic_test_runner.gd",
-            f"--result-file={result_file}"
+            f"--result-file={result_file}",
         ]
+        if extra_args:
+            cmd.extend(extra_args)
         completed = subprocess.run(
             cmd,
             stdout=subprocess.PIPE,
