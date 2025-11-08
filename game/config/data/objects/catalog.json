@@ -1,0 +1,240 @@
+{
+  "hero": {
+    "hero_arcane": {
+      "type": "hero",
+      "id": "hero_arcane",
+      "name": "Arcane Wanderer",
+      "description": "Default playable hero tuned via YAML.",
+      "scene": "res://scenes/player.tscn",
+      "resource": null,
+      "properties": {
+        "max_health": 140,
+        "move_speed": 320,
+        "base_damage": 12,
+        "equipped_weapon": "res://resources/weapons/basic_wand.tres"
+      },
+      "tags": [
+        "starter",
+        "ranged"
+      ],
+      "metadata": {
+        "icon": "res://assets/hero_pika.svg"
+      },
+      "texture": null,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "max_health": 140,
+      "move_speed": 320.0,
+      "base_damage": 12,
+      "projectile_scene": null,
+      "starting_weapon": null,
+      "hud_icon": null
+    },
+    "hero_sentinel": {
+      "type": "hero",
+      "id": "hero_sentinel",
+      "name": "Sentinel of Dunes",
+      "description": "Defensive hero with higher health.",
+      "scene": "res://scenes/player.tscn",
+      "resource": null,
+      "properties": {
+        "max_health": 200,
+        "move_speed": 260,
+        "base_damage": 10,
+        "equipped_weapon": "res://resources/weapons/demolition_pack.tres"
+      },
+      "tags": [
+        "defense"
+      ],
+      "metadata": {
+        "icon": "res://assets/hero_pika.svg"
+      },
+      "texture": null,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "max_health": 200,
+      "move_speed": 260.0,
+      "base_damage": 10,
+      "projectile_scene": null,
+      "starting_weapon": null,
+      "hud_icon": null
+    },
+    "hero_rogue": {
+      "type": "hero",
+      "id": "hero_rogue",
+      "name": "Rogue Nomad",
+      "description": "Fast hero that favors lightning weapons.",
+      "scene": "res://scenes/player.tscn",
+      "resource": null,
+      "properties": {
+        "max_health": 110,
+        "move_speed": 380,
+        "base_damage": 14,
+        "equipped_weapon": "res://resources/weapons/lightning_staff.tres"
+      },
+      "tags": [
+        "speed"
+      ],
+      "metadata": {
+        "icon": "res://assets/hero_pika.svg"
+      },
+      "texture": null,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "max_health": 110,
+      "move_speed": 380.0,
+      "base_damage": 14,
+      "projectile_scene": null,
+      "starting_weapon": null,
+      "hud_icon": null
+    }
+  },
+  "monster": {
+    "monster_grunt": {
+      "type": "monster",
+      "id": "monster_grunt",
+      "name": "Sand Grunt",
+      "description": "Slow melee enemy for early waves.",
+      "scene": "res://scenes/enemy.tscn",
+      "resource": null,
+      "properties": {
+        "max_health": 60,
+        "move_speed": 180,
+        "base_damage": 8
+      },
+      "tags": [],
+      "metadata": {},
+      "texture": null,
+      "scale": [
+        1.0,
+        1.0
+      ],
+      "max_health": 60,
+      "move_speed": 180.0,
+      "base_damage": 8,
+      "projectile_scene": null,
+      "spawn_weight": 1.0,
+      "loot_table": {}
+    }
+  },
+  "projectile": {
+    "projectile_magic_spark": {
+      "type": "projectile",
+      "id": "projectile_magic_spark",
+      "name": "Magic Spark",
+      "description": "",
+      "scene": "res://scenes/projectiles/magic_spark_projectile.tscn",
+      "resource": null,
+      "properties": {
+        "damage": 18,
+        "speed": 520,
+        "lifetime": 2.4
+      },
+      "tags": [],
+      "metadata": {},
+      "speed": 520.0,
+      "damage": 18,
+      "lifetime": 2.4
+    }
+  },
+  "weapon": {
+    "weapon_arcane_wand": {
+      "type": "weapon",
+      "id": "weapon_arcane_wand",
+      "name": "Arcane Wand",
+      "description": "",
+      "scene": null,
+      "resource": "res://resources/weapons/basic_wand.tres",
+      "properties": {
+        "firing_rate": 0.6
+      },
+      "tags": [],
+      "metadata": {
+        "icon": "res://assets/icons/weapon_arcane.svg"
+      },
+      "firing_rate": 0.6,
+      "projectile_scene": null,
+      "ammunition": null
+    },
+    "weapon_lightning_staff": {
+      "type": "weapon",
+      "id": "weapon_lightning_staff",
+      "name": "Stormcall Staff",
+      "description": "",
+      "scene": null,
+      "resource": "res://resources/weapons/lightning_staff.tres",
+      "properties": {
+        "firing_rate": 0.85
+      },
+      "tags": [],
+      "metadata": {
+        "icon": "res://assets/icons/weapon_lightning.svg"
+      },
+      "firing_rate": 0.85,
+      "projectile_scene": null,
+      "ammunition": null
+    },
+    "weapon_pyromancer_tome": {
+      "type": "weapon",
+      "id": "weapon_pyromancer_tome",
+      "name": "Pyromancer Tome",
+      "description": "",
+      "scene": null,
+      "resource": "res://resources/weapons/pyromancer_tome.tres",
+      "properties": {
+        "firing_rate": 1.2
+      },
+      "tags": [],
+      "metadata": {
+        "icon": "res://assets/icons/weapon_fire.svg"
+      },
+      "firing_rate": 1.2,
+      "projectile_scene": null,
+      "ammunition": null
+    },
+    "weapon_demolition_pack": {
+      "type": "weapon",
+      "id": "weapon_demolition_pack",
+      "name": "Demolition Pack",
+      "description": "",
+      "scene": null,
+      "resource": "res://resources/weapons/demolition_pack.tres",
+      "properties": {
+        "firing_rate": 1.8
+      },
+      "tags": [],
+      "metadata": {
+        "icon": "res://assets/icons/weapon_dynamite.svg"
+      },
+      "firing_rate": 1.8,
+      "projectile_scene": null,
+      "ammunition": null
+    },
+    "weapon_tempest_totem": {
+      "type": "weapon",
+      "id": "weapon_tempest_totem",
+      "name": "Tempest Totem",
+      "description": "Piercing columns of wind that travel slowly but hit everything in their path.",
+      "scene": null,
+      "resource": "res://resources/weapons/tempest_totem.tres",
+      "properties": {
+        "firing_rate": 1.0
+      },
+      "tags": [
+        "pierce"
+      ],
+      "metadata": {
+        "icon": "res://assets/icons/weapon_tempest.svg"
+      },
+      "firing_rate": 1.0,
+      "projectile_scene": null,
+      "ammunition": null
+    }
+  }
+}

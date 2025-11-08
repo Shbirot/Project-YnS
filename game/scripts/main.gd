@@ -125,3 +125,68 @@ func _get_background_rect() -> Rect2:
 		scaled_size = Vector2(3000, 3000)
 	var position = -scaled_size * 0.5
 	return Rect2(position, scaled_size)
+
+func apply_loadout(hero_id: String, weapon_id: String) -> void:
+	var catalog = _get_catalog()
+	if catalog == null:
+		Log.error("Main: ObjectCatalog unavailable; loadout skipped")
+		return
+	if hero_id != "":
+		var hero_spec: Dictionary = catalog.get_spec("hero", hero_id)
+		if hero_spec:
+			_apply_character_properties(player, hero_spec.get("properties", {}))
+		else:
+			Log.warn("Main: hero spec %s missing" % hero_id)
+	if weapon_id != "":
+		_apply_weapon_from_spec(catalog.get_spec("weapon", weapon_id))
+	if player:
+		player._current_health = player.max_health
+		player.health_changed.emit(player._current_health, player.max_health)
+	hud.update_health(player.max_health, player.max_health)
+
+func _apply_character_properties(target: Node, properties: Dictionary) -> void:
+	if properties.is_empty():
+		return
+	var property_names := _get_property_names(target)
+	for key in properties.keys():
+		if key == "equipped_weapon":
+			var path = properties[key]
+			_apply_weapon_path(path)
+			continue
+		if property_names.has(key):
+			target.set(key, properties[key])
+
+func _apply_weapon_from_spec(spec: Dictionary) -> void:
+	if spec.is_empty():
+		Log.warn("Main: weapon spec missing")
+		return
+	var path: String = spec.get("resource", "")
+	_apply_weapon_path(path)
+
+func _apply_weapon_path(path: String) -> void:
+	if typeof(path) != TYPE_STRING or path == "":
+		Log.warn("Main: invalid weapon path: %s" % path)
+		return
+	if not ResourceLoader.exists(path):
+		Log.warn("Main: weapon resource not found %s" % path)
+		return
+	var weapon: Resource = ResourceLoader.load(path)
+	if weapon:
+		player.equipped_weapon = weapon
+		player._move_config_from_weapon()
+	else:
+		Log.error("Main: failed to load weapon resource %s" % path)
+
+func _get_property_names(target: Object) -> Dictionary:
+	var map := {}
+	for prop in target.get_property_list():
+		map[prop.get("name")] = true
+	return map
+
+func _get_catalog():
+	var tree = Engine.get_main_loop()
+	if tree is SceneTree:
+		var root = tree.get_root()
+		if root:
+			return root.get_node_or_null("ObjectCatalog")
+	return null

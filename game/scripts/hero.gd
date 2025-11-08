@@ -2,9 +2,11 @@ extends HeroCharacter
 
 signal player_died
 
+@export var equipped_weapon : Weapon
 var coins := 0
 
 func _ready() -> void:
+	_move_config_from_weapon()
 	move_speed = ConfigManager.get_value("hero.move_speed", move_speed)
 	fire_interval = ConfigManager.get_value("hero.fire_interval", fire_interval)
 	projectile_speed = ConfigManager.get_value("hero.projectile_speed", projectile_speed)
@@ -15,6 +17,10 @@ func _ready() -> void:
 func add_currency(amount: int) -> void:
 	coins += amount
 	Log.debug("Hero coins=%d" % coins)
+
+func _move_config_from_weapon() -> void:
+	if equipped_weapon:
+		equipped_weapon.apply_to(self)
 
 func get_snapshot_data() -> Dictionary:
 	return {
