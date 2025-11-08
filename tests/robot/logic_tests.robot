@@ -138,6 +138,9 @@ Calculation Manager (Gameplay)
 Calculation Manager (Random)
     Run Single Case    ${CASE_DIR}/calculation_manager_random_test.gd
 
+Calculation Manager (Edge Cases)
+    Run Single Case    ${CASE_DIR}/calculation_manager_edge_cases_test.gd
+
 SceneTree Util
     Run Single Case    ${CASE_DIR}/scene_tree_util_test.gd
 
