@@ -43,3 +43,5 @@ report.html
 *.uid
 game/.godot/shader_cache/
 game/addons/
+game/.godot/editor/editor_layout.cfg
+game/.godot/editor/filesystem_cache10
