@@ -30,3 +30,7 @@ static func clamp_to_world(body: CharacterBody2D, half_extent: Vector2 = Vector2
 	if new_pos != body.global_position:
 		Log.debug("WorldBounds blocking %s at %s" % [body.name, new_pos])
 	body.global_position = new_pos
+
+static func contains_with_margin(point: Vector2, margin: float = 0.0) -> bool:
+	var expanded := Rect2(rect.position - Vector2.ONE * margin, rect.size + Vector2.ONE * margin * 2.0)
+	return expanded.has_point(point)
