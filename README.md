@@ -6,9 +6,10 @@ Infrastructure scaffolding for a Vampire Survivors–style mobile game built wit
 - **Godot 4 project** ready for desktop + Android builds with per-environment tuning (`dev`, `stage`, `prod`).
 - **Mobile-ready controls**: keyboard + virtual drag joystick hybrid for immediate phone testing.
 - **Mock gameplay loop**: player, enemy spawner, projectiles, HUD—replace art and extend systems as you design new weapons/upgrades.
-- **Automation**: shell scripts for running, editing, exporting; GitHub Actions workflow for reproducible builds.
+- **Automation**: shell scripts for running, editing, exporting; GitHub Actions workflow for running tests.
 - **Config-driven balancing**: `GameConfig` autoload toggles spawn rates, analytics flags, and other knobs via environment tags.
 - **OOP gameplay stack**: `VisualGameObject → Character → Hero/Monster` hierarchy keeps future entities consistent, while `ConfigManager` + `Logger` give you data-driven tuning and persistent logs out of the box.
+- **Centralized Utilities**: A suite of `utils` scripts (`SceneTreeUtil`, `TypeUtil`, `NodeUtil`, `TargetFinderUtil`) provide reusable helpers for common operations like accessing singletons, coercing types, and finding nodes.
 - **Low-latency systems**: `MovementSystem`, `CombatSystem`, and `InteractionSystem` centralize hot-path mechanics so the arena can sustain large enemy counts without scattering expensive per-node logic.
 - **Persistence-ready**: `PersistenceManager` snapshots hero state (position, coins, health, future progression) every 30s to `user://persistence.json` and restores it on startup—perfect for keeping dev adjustments or future player profiles in sync.
 - **Camera-ready**: `CameraController` keeps the hero centered with smooth scrolling and world bounds so the map stays static while the view tracks action.
@@ -25,7 +26,7 @@ Infrastructure scaffolding for a Vampire Survivors–style mobile game built wit
 .
 ├── game/                # Godot project (scenes, scripts, assets, export presets)
 ├── scripts/             # Helper scripts (run, edit, Android exports, env setup)
-├── docs/                # Architecture, workflow, Android build guides
+├── docs/                # Architecture, workflow, and diagram documents
 ├── config/              # Environment/keystore placeholders
 ├── dist/, build/        # Output folders (gitignored)
 ├── requirements-dev.txt # Python tooling deps (gdtoolkit, invoke, pre-commit)
@@ -74,12 +75,17 @@ Set `REMOTE_DEBUG=1` to have `run_dev.sh desktop` pass `--remote-debug tcp://127
 - Runtime logs stream to stdout and to `user://logs/nightfall_YYYYMMDD.log` (rotating daily) via the `Logger` autoload.
 
 5. **Reference diagrams**
-   - See `docs/block_diagram.md` for a high-level component diagram that mirrors the README.
+   - See `docs/block_diagram.md` for a high-level component diagram.
+   - See `docs/diagrams/` for more detailed diagrams of the architecture, including:
+     - `inheritance_map.md`: The class inheritance hierarchy.
+     - `data_flow.md`: How data flows between core systems.
+     - `object_creation.md`: The object creation process from JSON to an in-game node.
    - `docs/object_factory.md` documents the JSON→Godot factory workflow.
 
-6. **Headless sanity checks**
-   - Install `xvfb` on your host (`sudo apt install xvfb`) so Godot can run without an attached display.
-   - Run `./scripts/check_game.sh` to lint GDScript (via `gdlint`) and execute `godot --check-only` under `xvfb-run` before opening the editor or pushing to CI.
+6. **Testing**
+   - The project uses the Robot Framework to run a suite of GDScript-based logic tests.
+   - Run the full test suite with `./run_tests.sh`.
+   - Add new tests to the `game/tests/robot/cases/` directory and update `tests/robot/logic_tests.robot` to include them.
 
 7. **Object catalog (optional but recommended)**
    - Author specs in `game/config/data/objects/catalog.json`. Each top-level key (`hero`, `monster`, `projectile`, `weapon`, etc.) maps ids to dictionaries describing their stats, scenes, and metadata.
@@ -89,7 +95,8 @@ Set `REMOTE_DEBUG=1` to have `run_dev.sh desktop` pass `--remote-debug tcp://127
    - Bottom-right HUD buttons pause the game. “Pause” opens the pause menu (resume/restart/exit) while “Attributes” opens the live attribute inspector powered by `AttributesManager`.
 
 9. **CI/CD**
-   - Pushes to `develop`/`main` trigger `.github/workflows/ci.yml`, running desktop + stage exports inside a containerized Godot build.
+   - Pushes to `dev`, `stage`, `prod`, and `master` branches (and pull requests to `master`) trigger the `.github/workflows/ci.yml` workflow.
+   - The CI pipeline runs the full Robot Framework test suite to ensure that no regressions have been introduced.
 
 ## Environment profiles
 
@@ -99,7 +106,7 @@ Environment | Purpose | Differences
 `stage` | device QA, release-candidate balancing | faster spawns, analytics still disabled
 `prod` | Play Store builds | spawn buffs, analytics enabled, release keystore required
 
-`GameConfig` chooses the profile via (1) `custom_features` inside export presets (`env.dev`, `env.stage`, `env.prod`) or (2) the `NIGHTFALL_ENV` env var for local runs.
+`GameConfig` chooses the profile via (1) `custom_features` inside export presets (`env.dev`, `env.stage`, `prod`) or (2) the `NIGHTFALL_ENV` env var for local runs.
 
 ## Weapons & Projectiles
 
