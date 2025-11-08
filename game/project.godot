@@ -23,6 +23,9 @@ Logger="*res://autoload/logger.gd"
 ConfigManager="*res://autoload/config_manager.gd"
 GameConfig="*res://autoload/game_config.gd"
 PersistenceManager="*res://autoload/persistence_manager.gd"
+GameController="*res://scripts/core/game_controller.gd"
+BootLoader="*res://scripts/core/boot_loader.gd"
+ObjectCatalog="*res://scripts/factories/object_catalog.gd"
 
 [display]
 
