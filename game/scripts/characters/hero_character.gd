@@ -6,6 +6,7 @@ const MovementSystem = preload("res://scripts/systems/movement_system.gd")
 const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
 const WeaponAmmunition = preload("res://scripts/weapons/ammunition_base.gd")
 const SceneTreeUtil = preload("res://scripts/utils/scene_tree_util.gd")
+const TargetFinderUtil = preload("res://scripts/utils/target_finder_util.gd")
 const HALF_EXTENT := Vector2(20, 20)
 
 @export var accel := 1600.0
@@ -102,17 +103,10 @@ func _fire_projectile() -> void:
 	get_tree().current_scene.add_child(projectile)
 
 func _get_target_direction() -> Vector2:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	var closest_dir = Vector2.ZERO
-	var closest_distance = INF
-	for enemy in enemies:
-		if not enemy is Node2D or not enemy.is_inside_tree() or not enemy.is_enabled:
-			continue
-		var distance = global_position.distance_squared_to(enemy.global_position)
-		if distance < closest_distance:
-			closest_distance = distance
-			closest_dir = (enemy.global_position - global_position).normalized()
-	return closest_dir
+	var closest_enemy = TargetFinderUtil.get_closest_target_in_group(global_position, "enemies", get_tree)
+	if closest_enemy:
+		return (closest_enemy.global_position - global_position).normalized()
+	return Vector2.ZERO
 
 func set_ammunition(ammunition: WeaponAmmunition) -> void:
 	_ammunition = ammunition
