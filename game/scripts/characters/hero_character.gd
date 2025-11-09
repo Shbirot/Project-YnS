@@ -5,7 +5,7 @@ class_name HeroCharacter
 const MovementSystem = preload("res://scripts/systems/movement_system.gd")
 const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
 const WeaponAmmunition = preload("res://scripts/weapons/ammunition_base.gd")
-const SceneTreeUtil = preload("res://scripts/utils/scene_tree_util.gd")
+const SingletonUtil = preload("res://scripts/utils/singleton_util.gd")
 const TargetFinderUtil = preload("res://scripts/utils/target_finder_util.gd")
 const HALF_EXTENT := Vector2(20, 20)
 
@@ -21,7 +21,6 @@ var _touch_origin := Vector2.ZERO
 var _touch_vector := Vector2.ZERO
 var _ammunition : WeaponAmmunition
 var _damage_type := "physical"
-var _game_controller
 
 @onready var fire_timer : Timer = _ensure_timer()
 
@@ -37,14 +36,29 @@ func _ensure_timer() -> Timer:
 
 func _ready() -> void:
 	super._ready()
-	_game_controller = SceneTreeUtil.get_autoload("GameController")
 	set_process_unhandled_input(true)
 	set_fire_interval_value(fire_interval)
 	fire_timer.timeout.connect(_fire_projectile)
 	fire_timer.start()
-	# Report stats to GameController once at the end after all initialization
-	_report_stats_to_game_controller()
+	# Report stats to APIManager once at the end after all initialization
+	_report_stats_to_api_manager()
+	_log_collision_geometry()
 	Log.info("HeroCharacter ready: %s" % _log_name())
+
+func _log_collision_geometry() -> void:
+	var shape = get_node_or_null("CollisionShape2D")
+	if shape and shape.shape:
+		var shape_type = shape.shape.get_class()
+		var shape_details = ""
+		if shape.shape is CircleShape2D:
+			shape_details = "radius=%.1f" % shape.shape.radius
+		elif shape.shape is RectangleShape2D:
+			shape_details = "size=%s (half_diagonal=%.1f)" % [shape.shape.size, shape.shape.size.length() / 2.0]
+		elif shape.shape is CapsuleShape2D:
+			shape_details = "radius=%.1f, height=%.1f" % [shape.shape.radius, shape.shape.height]
+		Log.info("HERO COLLISION: type=%s, %s, position=%s, collision_layer=%d, collision_mask=%d" % [shape_type, shape_details, global_position, collision_layer, collision_mask])
+	else:
+		Log.warn("HERO COLLISION: has NO collision shape!")
 
 func _unhandled_input(event: InputEvent) -> void:
 	var viewport_width = get_viewport_rect().size.x
@@ -122,13 +136,20 @@ func set_damage_type(damage_type: String) -> void:
 	_damage_type = damage_type
 	Log.debug("HeroCharacter %s damage_type=%s" % [_log_name(), damage_type])
 
-func _report_stats_to_game_controller() -> void:
-	if _game_controller == null:
-		Log.warn("HeroCharacter: GameController not available for %s" % _log_name())
+func _report_stats_to_api_manager() -> void:
+	var api = SingletonUtil.get_api_manager()
+	if api == null:
+		Log.warn("HeroCharacter: APIManager not available for %s" % _log_name())
 		return
-	# Report current stats through GameController's API
-	_game_controller.update_hero_attributes({
-		"hp": max_health,
-		"fire_rate": fire_interval,
-		"projectile_speed": projectile_speed,
-	})
+
+	# Initialize hero HP in APIManager
+	api.set_hero_max_hp(max_health)
+	api.set_hero_hp(max_health)
+
+	# Report hero attributes
+	api.set_hero_attribute("fire_rate", fire_interval)
+	api.set_hero_attribute("projectile_speed", projectile_speed)
+
+	Log.info("HeroCharacter: Reported stats to APIManager (max_hp=%d, fire_rate=%.2f, projectile_speed=%.0f)" % [
+		max_health, fire_interval, projectile_speed
+	])

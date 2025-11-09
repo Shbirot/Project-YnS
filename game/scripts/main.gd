@@ -2,6 +2,7 @@ extends Node2D
 
 const WorldBounds = preload("res://scripts/systems/world_bounds.gd")
 const Log = preload("res://scripts/utils/log_helper.gd")
+const SingletonUtil = preload("res://scripts/utils/singleton_util.gd")
 
 @onready var player = $World/Player
 @onready var spawner = $EnemySpawner
@@ -23,9 +24,20 @@ func _ready() -> void:
 	set_process_input(true)
 	_reset_background()
 	spawner.set_player(player)
-	player.health_changed.connect(hud.update_health)
-	player.player_died.connect(_on_player_died)
-	hud.update_health(player.max_health, player.max_health)
+
+	# Connect to APIManager signals instead of player signals
+	var api = SingletonUtil.get_api_manager()
+	if api:
+		api.hero_hp_changed.connect(hud.update_health)
+		api.hero_died.connect(_on_player_died)
+		# Initialize HUD with starting HP
+		hud.update_health(api.get_hero_hp(), api.get_hero_max_hp())
+		Log.info("Main: Connected to APIManager signals")
+	else:
+		Log.error("Main: APIManager not available!")
+		# Fallback to default display
+		hud.update_health(100, 100)
+
 	hud.set_status_text("Survive the night")
 	_connect_enemies()
 
@@ -35,10 +47,26 @@ func _process(delta: float) -> void:
 	_elapsed += delta
 	hud.update_timer(_elapsed)
 
-func _on_player_died() -> void:
+func _on_player_died(source) -> void:
+	if _is_game_over:
+		return  # Already dead, don't process again
+
 	_is_game_over = true
 	hud.set_status_text("You were overwhelmed!")
 	spawner.stop()
+
+	Log.info("Main: Hero died from %s" % (source.display_name if source and "display_name" in source else "unknown"))
+
+	# Show pause menu with restart/exit options
+	var api = SingletonUtil.get_api_manager()
+	if api:
+		# Get the pause menu window and set it to game over mode
+		var pause_menu = get_tree().current_scene.get_node_or_null("CanvasLayer/PauseMenu")
+		if pause_menu and pause_menu.has_method("set_game_over_mode"):
+			pause_menu.set_game_over_mode(true)
+		api.show_window("pause_menu")
+	else:
+		Log.warn("Main: APIManager not found for showing pause menu")
 
 func _input(event: InputEvent) -> void:
 	if not _debug_spawn_enabled:
@@ -139,10 +167,16 @@ func apply_loadout(hero_id: String, weapon_id: String) -> void:
 			Log.warn("Main: hero spec %s missing" % hero_id)
 	if weapon_id != "":
 		_apply_weapon_from_spec(catalog.get_spec("weapon", weapon_id))
-	if player:
-		player._current_health = player.max_health
-		player.health_changed.emit(player._current_health, player.max_health)
-	hud.update_health(player.max_health, player.max_health)
+
+	# Reset hero HP through APIManager
+	var api = SingletonUtil.get_api_manager()
+	if api and player:
+		api.set_hero_max_hp(player.max_health)
+		api.set_hero_hp(player.max_health)
+		hud.update_health(player.max_health, player.max_health)
+		Log.info("Main: Reset hero HP to %d" % player.max_health)
+	else:
+		Log.warn("Main: Could not reset hero HP")
 
 func _apply_character_properties(target: Node, properties: Dictionary) -> void:
 	if properties.is_empty():

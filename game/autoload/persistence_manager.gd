@@ -30,9 +30,6 @@ func _apply_state() -> void:
 	var hero = _get_hero()
 	if hero_state and hero:
 		hero.global_position = hero_state.get("position", hero.global_position)
-		hero.coins = hero_state.get("coins", hero.coins)
-		if hero.has_method("apply_snapshot_data"):
-			hero.apply_snapshot_data(hero_state)
 	_restore_obstacles(_data.get("obstacles", []))
 
 func _capture_and_save() -> void:
@@ -45,10 +42,7 @@ func _capture_state() -> void:
 	if hero:
 		_data["hero"] = {
 			"position": hero.global_position,
-			"coins": hero.coins,
 		}
-		if hero.has_method("get_snapshot_data"):
-			_data["hero"].merge(hero.get_snapshot_data(), true)
 	_data["obstacles"] = _snapshot_obstacles()
 
 func _save_state() -> void:

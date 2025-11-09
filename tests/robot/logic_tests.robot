@@ -86,6 +86,9 @@ Combat Monster Damage
 Combat Contact Cooldown
     Run Single Case    ${CASE_DIR}/combat_contact_cooldown_test.gd
 
+Monster Hero Contact Damage
+    Run Single Case    ${CASE_DIR}/monster_hero_contact_damage_test.gd
+
 Visual Game Object
     Run Single Case    ${CASE_DIR}/visual_game_object_test.gd
 

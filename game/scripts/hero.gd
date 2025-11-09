@@ -1,9 +1,6 @@
 extends HeroCharacter
 
-signal player_died
-
 @export var equipped_weapon : Weapon
-var coins := 0
 
 func _ready() -> void:
 	_move_config_from_weapon()
@@ -14,24 +11,6 @@ func _ready() -> void:
 	super._ready()
 	add_to_group("heroes")
 
-func add_currency(amount: int) -> void:
-	coins += amount
-	Log.debug("Hero coins=%d" % coins)
-
 func _move_config_from_weapon() -> void:
 	if equipped_weapon:
 		equipped_weapon.apply_to(self)
-
-func get_snapshot_data() -> Dictionary:
-	return {
-		"health": _current_health,
-	}
-
-func apply_snapshot_data(state: Dictionary) -> void:
-	if state.has("health"):
-		_current_health = clamp(state["health"], 0, max_health)
-		health_changed.emit(_current_health, max_health)
-
-func _emit_death(source):
-	super._emit_death(source)
-	player_died.emit()

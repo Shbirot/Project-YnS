@@ -1,6 +1,5 @@
 extends Node
 
-const ApiManager = preload("res://scripts/core/api_manager.gd")
 const GameWindow = preload("res://scripts/ui/game_window.gd")
 const AttributesManager = preload("res://scripts/core/attributes_manager.gd")
 const DamageNumberManager = preload("res://scripts/effects/damage_number_manager.gd")
@@ -12,7 +11,6 @@ var _config_manager
 var _persistence_manager
 var _menus := {}
 var _windows := {}
-var _api_manager : ApiManager
 var _initialized := false
 var _attributes_manager : AttributesManager
 var _damage_manager : DamageNumberManager
@@ -31,19 +29,19 @@ func initialize() -> void:
 	_config_manager = SceneTreeUtil.get_autoload("ConfigManager")
 	_persistence_manager = SceneTreeUtil.get_autoload("PersistenceManager")
 	_setup_menu_layer()
-	var disable_api := false
-	if OS.has_environment("DISABLE_API_MANAGER"):
-		var value = OS.get_environment("DISABLE_API_MANAGER")
-		disable_api = value != ""
-	if not disable_api:
-		_api_manager = ApiManager.new()
-		add_child(_api_manager)
-		_api_manager.start(self)
+
+	# Initialize managers
 	_attributes_manager = AttributesManager.new()
 	add_child(_attributes_manager)
-	# AttributesManager initializes with defaults, no need to reset
 	_damage_manager = DamageNumberManager.new()
 	add_child(_damage_manager)
+
+	# Connect APIManager to our managers
+	var api = SceneTreeUtil.get_autoload("APIManager")
+	if api and api.has_method("initialize_with_managers"):
+		api.initialize_with_managers(self, _attributes_manager, _damage_manager)
+		Log.info("GameController: APIManager connected")
+
 	_initialized = true
 
 func is_initialized() -> bool:
