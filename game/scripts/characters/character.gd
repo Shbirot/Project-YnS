@@ -13,6 +13,12 @@ signal died  # Monsters only
 @export var base_damage := 10
 @export var team := "neutral"
 
+## Animation state enumeration
+enum AnimState { IDLE, WALK, ATTACK, HURT, DEATH }
+
+## Current animation state (tracked for animated sprites)
+var current_anim_state := AnimState.IDLE
+
 ## Local HP for MONSTERS only (heroes use APIManager)
 var _current_health := 0
 
@@ -57,6 +63,10 @@ func apply_damage(amount: int, source = null) -> void:
 		display_name, amount, old_hp, _current_health, source_name
 	])
 
+	# Play hurt animation if using animated sprites
+	if _current_health > 0:
+		play_hurt_animation()
+
 	if _current_health <= 0:
 		_emit_death(source)
 
@@ -72,5 +82,57 @@ func heal(amount: int) -> void:
 func _emit_death(source):
 	var source_name = NodeUtil.get_display_name(source)
 	Log.warn("%s died (source=%s)" % [display_name, source_name])
+	play_death_animation()
 	died.emit()
 	set_enabled(false)
+
+## Update animation state based on character movement and actions
+## Call this from _physics_process in derived classes (HeroCharacter, MonsterCharacter)
+func _update_animation_state() -> void:
+	if not use_animated_sprite:
+		return
+
+	var new_state := AnimState.IDLE
+
+	# Determine state based on velocity
+	if velocity.length() > 10.0:
+		new_state = AnimState.WALK
+	else:
+		new_state = AnimState.IDLE
+
+	# Only update if state changed
+	if new_state != current_anim_state:
+		current_anim_state = new_state
+		_play_state_animation(new_state)
+
+## Play the animation corresponding to the given state
+func _play_state_animation(state: AnimState) -> void:
+	match state:
+		AnimState.IDLE:
+			play_animation("idle")
+		AnimState.WALK:
+			play_animation("walk")
+		AnimState.ATTACK:
+			play_animation("attack", true)
+		AnimState.HURT:
+			play_animation("hurt", true)
+		AnimState.DEATH:
+			play_animation("death", true)
+
+## Trigger attack animation (call this when character attacks)
+func play_attack_animation() -> void:
+	if use_animated_sprite and animated_sprite:
+		current_anim_state = AnimState.ATTACK
+		_play_state_animation(AnimState.ATTACK)
+
+## Trigger hurt animation (call this when character takes damage)
+func play_hurt_animation() -> void:
+	if use_animated_sprite and animated_sprite:
+		current_anim_state = AnimState.HURT
+		_play_state_animation(AnimState.HURT)
+
+## Trigger death animation (call this when character dies)
+func play_death_animation() -> void:
+	if use_animated_sprite and animated_sprite:
+		current_anim_state = AnimState.DEATH
+		_play_state_animation(AnimState.DEATH)

@@ -11,14 +11,20 @@
         "max_health": 140,
         "move_speed": 320,
         "base_damage": 12,
-        "equipped_weapon": "res://resources/weapons/basic_wand.tres"
+        "equipped_weapon": "res://resources/weapons/basic_wand.tres",
+        "use_animated_sprite": true,
+        "sprite_frames": "res://assets/characters/heroes/arcane_wanderer/arcane_wanderer_animations.tres",
+        "sprite_texture": null
       },
       "tags": [
         "starter",
         "ranged"
       ],
       "metadata": {
-        "icon": "res://assets/hero_pika.svg"
+        "icon": "res://assets/characters/heroes/arcane_wanderer/arcane_wanderer_portrait.png",
+        "portrait": "res://assets/characters/heroes/arcane_wanderer/arcane_wanderer_portrait.png",
+        "description": "Master of arcane magic, strikes from afar with mystical energy.",
+        "glow_texture": "res://assets/characters/heroes/arcane_wanderer/arcane_wanderer_glow.png"
       },
       "texture": null,
       "scale": [
@@ -128,16 +134,24 @@
       "type": "projectile",
       "id": "projectile_magic_spark",
       "name": "Magic Spark",
-      "description": "",
+      "description": "Blue arcane energy projectile with magical trail.",
       "scene": "res://scenes/projectiles/magic_spark_projectile.tscn",
       "resource": null,
       "properties": {
         "damage": 18,
         "speed": 520,
-        "lifetime": 2.4
+        "lifetime": 2.4,
+        "trail_particles": null,
+        "use_glow_shader": false,
+        "glow_texture": null,
+        "glow_color": [0.5, 0.8, 1.0, 1.0],
+        "glow_intensity": 1.5,
+        "pulse_speed": 2.0
       },
-      "tags": [],
-      "metadata": {},
+      "tags": ["magic", "arcane"],
+      "metadata": {
+        "visual_theme": "blue_magic"
+      },
       "speed": 520.0,
       "damage": 18,
       "lifetime": 2.4

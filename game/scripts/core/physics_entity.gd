@@ -59,8 +59,13 @@ var render_tier: RenderTier = RenderTier.IMPORTANT
 
 ## Components
 var sprite: Sprite2D = null
+var animated_sprite: AnimatedSprite2D = null
 var collision_shape: CollisionShape2D = null
 var interaction_area: Area2D = null
+
+## Animation properties
+@export var use_animated_sprite := false
+@export var sprite_frames : SpriteFrames
 
 ## Stats dictionary
 var stats: Dictionary = {}
@@ -109,7 +114,10 @@ func deactivate() -> void:
 
 ## Component management
 func _setup_components() -> void:
-	if has_node("Sprite2D"):
+	if has_node("AnimatedSprite2D"):
+		animated_sprite = get_node("AnimatedSprite2D")
+		use_animated_sprite = true
+	elif has_node("Sprite2D"):
 		sprite = get_node("Sprite2D")
 
 	if collision_mode != CollisionMode.NONE:
@@ -214,3 +222,24 @@ func set_pool_id(id: String) -> void:
 
 func get_pool_id() -> String:
 	return _pool_id
+
+## Animation support for Character classes
+func play_animation(anim_name: String, force_restart := false) -> void:
+	if not animated_sprite:
+		return
+	if force_restart or animated_sprite.animation != anim_name:
+		animated_sprite.play(anim_name)
+
+func stop_animation() -> void:
+	if animated_sprite:
+		animated_sprite.stop()
+
+func get_current_animation() -> String:
+	if animated_sprite:
+		return animated_sprite.animation
+	return ""
+
+func is_playing_animation() -> bool:
+	if animated_sprite:
+		return animated_sprite.is_playing()
+	return false

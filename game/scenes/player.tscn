@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://sss6m56dpnwa"]
 
 [ext_resource type="Script" path="res://scripts/hero.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://3fsigi6d5dau" path="res://assets/hero_pika.svg" id="2"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/heroes/arcane_wanderer/arcane_wanderer_animations.tres" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/projectiles/magic_spark_projectile.tscn" id="3"]
 [ext_resource type="Resource" path="res://resources/weapons/basic_wand.tres" id="4"]
 
@@ -14,12 +14,16 @@ collision_mask = 6
 script = ExtResource("1")
 display_name = "Hero"
 object_id = "hero_player"
+use_animated_sprite = true
+sprite_frames = ExtResource("2")
 projectile_scene = ExtResource("3")
 equipped_weapon = ExtResource("4")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.6, 0.6)
-texture = ExtResource("2")
+sprite_frames = ExtResource("2")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")

@@ -85,6 +85,9 @@ func _physics_process(_delta: float) -> void:
 	MovementSystem.apply_input_with_accel(self, _move_input, move_speed, accel, friction, _delta)
 	WorldBounds.clamp_to_world(self, HALF_EXTENT)
 
+	# Update animation based on movement
+	_update_animation_state()
+
 func _fire_projectile() -> void:
 	if not is_enabled:
 		return
