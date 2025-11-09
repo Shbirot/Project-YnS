@@ -7,6 +7,8 @@ class TargetStub:
 	var total_damage := 0
 	func apply_damage(amount, _source):
 		total_damage += amount
+	func is_in_group(_group_name: String) -> bool:
+		return false  # Not a hero, so use local HP management
 
 func get_name() -> String:
 	return "CombatContactCooldown"
