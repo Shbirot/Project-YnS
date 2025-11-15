@@ -1,8 +1,8 @@
 extends RefCounted
 class_name LogicTestCase
 
-var _results := []
-var _summary_lines := []
+var _results = []
+var _summary_lines = []
 
 func get_name() -> String:
 	return self.get_class()
@@ -46,8 +46,8 @@ func assert_vector_almost_equal(actual: Vector2, expected: Vector2, tolerance: f
 		"tolerance": tolerance,
 	})
 
-func push_result(passed: bool, message: String, extra := {}) -> void:
-	var payload := {
+func push_result(passed: bool, message: String, extra = {}) -> void:
+	var payload = {
 		"case": message,
 		"passed": passed,
 	}

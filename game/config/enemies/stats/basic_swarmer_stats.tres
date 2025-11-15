@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatBlock" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/shared/resources/stat_block.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+env_prefix = "NF_ENEMY_BASIC_SWARMER"
+max_hp = 20.0
+attack = 5.0
+speed = 140.0
+attack_speed = 1.0

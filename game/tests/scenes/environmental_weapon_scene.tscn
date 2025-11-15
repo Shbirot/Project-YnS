@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://src/features/player/hero.tscn" id="1"]
+[ext_resource type="Resource" path="res://src/features/weapons/environmental_aura_weapon.tres" id="2"]
+[ext_resource type="Script" path="res://tests/scenes/environmental_weapon_spawner.gd" id="3"]
+[ext_resource type="Script" path="res://tests/scenes/dummy_actor.gd" id="4"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 8.0
+
+[node name="EnvironmentalWeaponScene" type="Node2D"]
+
+[node name="Hero" parent="." instance=ExtResource("1")]
+position = Vector2(0, 0)
+
+[node name="HazardOwner" type="CharacterBody2D" parent="."]
+script = ExtResource("4")
+position = Vector2(40, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HazardOwner"]
+shape = SubResource("1")
+
+[node name="WeaponSpawner" type="Node" parent="."]
+script = ExtResource("3")
+weapon = ExtResource("2")
+owner_path = NodePath("../HazardOwner")

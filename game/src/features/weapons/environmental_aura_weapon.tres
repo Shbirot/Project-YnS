@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EnvironmentalWeapon" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/features/weapons/environmental_weapon.gd" id="1"]
+[ext_resource type="PackedScene" path="res://src/features/weapons/environmental_aura.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "environmental_aura"
+env_prefix = "NF_WEAPON_ENV_AURA"
+ammo_scene = ExtResource("2")
+cooldown = 3.0
+instance_count = 1
+spawn_radius = 0.0
+attach_to_owner = false

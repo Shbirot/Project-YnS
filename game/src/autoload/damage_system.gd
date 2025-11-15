@@ -11,16 +11,16 @@ func apply_projectile_hit(projectile: Node, target: Node) -> void:
 	if target == null:
 		return
 	if target.has_method("apply_damage"):
-		target.apply_damage(projectile.owner_ref, projectile.damage)
+		target.apply_damage(projectile.damage, projectile.owner_ref)
 		if _event_bus:
 			_event_bus.emit_safe("enemy_damaged", [target, projectile.damage, projectile.owner_ref])
 	else:
 		push_warning("DamageSystem: target %s missing apply_damage" % [target.name])
 
 func apply_hero_damage(source: Node, amount: float) -> void:
-	var hero := _find_hero()
+	var hero = _find_hero()
 	if hero and hero.has_method("apply_damage"):
-		hero.apply_damage(source, amount)
+		hero.apply_damage(amount, source)
 		if _event_bus:
 			_event_bus.emit_safe("hero_damaged", [hero, amount, source])
 

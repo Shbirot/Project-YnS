@@ -1,4 +1,5 @@
 {
+  "magic": "NF_AUTOPLAY_V1",
   "scene": "res://src/levels/main.tscn",
   "duration": 20,
   "movement_sequence": [

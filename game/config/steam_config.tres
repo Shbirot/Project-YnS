@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SteamConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/shared/resources/steam_config.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+app_id = 0
+enabled = false

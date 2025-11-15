@@ -1,0 +1,20 @@
+{
+  "magic": "NF_WAVES_V1",
+  "waves": [
+    { "time": 0, "spawns": [
+        { "archetype": "basic_swarmer", "count": 25 }
+    ], "radius": 220 },
+    { "time": 10, "spawns": [
+        { "archetype": "basic_swarmer", "count": 30 },
+        { "archetype": "empowered_brute", "count": 10 }
+    ], "radius": 240 },
+    { "time": 20, "spawns": [
+        { "archetype": "elite_ranger", "count": 8 },
+        { "archetype": "basic_swarmer", "count": 40 }
+    ], "radius": 260 },
+    { "time": 30, "spawns": [
+        { "archetype": "miniboss_gladiator", "count": 2 },
+        { "archetype": "basic_swarmer", "count": 50 }
+    ], "radius": 280 }
+  ]
+}

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="StatBlock" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/shared/resources/stat_block.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+env_prefix = "NF_ENEMY_MINIBOSS_GLADIATOR"
+max_hp = 150.0
+attack = 22.0
+speed = 150.0
+attack_speed = 1.1

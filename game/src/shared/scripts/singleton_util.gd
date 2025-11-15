@@ -12,6 +12,8 @@ static var _damage_system = null
 static var _projectile_pool = null
 static var _weapon_system = null
 static var _enemy_pool = null
+static var _logger = null
+static var _version_info = null
 
 static func get_event_bus():
 	if _event_bus == null:
@@ -52,6 +54,15 @@ static func get_enemy_pool():
 	if _enemy_pool == null:
 		_enemy_pool = _get_autoload("EnemyPool")
 	return _enemy_pool
+static func get_logger():
+	if _logger == null:
+		_logger = _get_autoload("Logger")
+	return _logger
+
+static func get_version_info():
+	if _version_info == null:
+		_version_info = _get_autoload("VersionInfo")
+	return _version_info
 
 ## Clear all cached references (useful for tests)
 static func clear_cache() -> void:
@@ -63,6 +74,8 @@ static func clear_cache() -> void:
 	_projectile_pool = null
 	_weapon_system = null
 	_enemy_pool = null
+	_logger = null
+	_version_info = null
 
 ## Internal helper to get autoload by name
 static func _get_autoload(name: String):

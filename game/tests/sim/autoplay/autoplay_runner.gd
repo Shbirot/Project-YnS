@@ -1,9 +1,10 @@
 extends SceneTree
 
 const AutoplayAgent = preload("res://tests/sim/autoplay/autoplay_agent.gd")
+const ConfigLoader = preload("res://src/shared/scripts/config_loader.gd")
 
-var default_config_path := "res://tests/sim/autoplay/autoplay_basic.json"
-var fallback_scene := "res://src/levels/main.tscn"
+var default_config_path = "res://tests/sim/autoplay/autoplay_basic.json"
+var fallback_scene = "res://src/levels/main.tscn"
 
 var _agent: AutoplayAgent
 var _config_path = ""
@@ -43,21 +44,20 @@ func _config_path_from_args() -> String:
 	return path
 
 func _load_config(path: String) -> Dictionary:
-	var file = FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		push_warning("[autoplay_runner] Cannot read config %s – using defaults." % path)
+	var config = ConfigLoader.load_autoplay_config(path)
+	if config.is_empty():
+		push_warning("[autoplay_runner] Invalid config %s – using defaults." % path)
 		return {
 			"scene": fallback_scene,
 			"duration": 20
 		}
-	var json = JSON.new()
-	if json.parse(file.get_as_text()) != OK:
-		push_warning("[autoplay_runner] Malformed JSON in %s – using defaults." % path)
+	if config.get("magic", "") != "NF_AUTOPLAY_V1":
+		push_warning("[autoplay_runner] Autoplay magic mismatch – using defaults.")
 		return {
 			"scene": fallback_scene,
 			"duration": 20
 		}
-	return json.data
+	return config
 
 func _on_simulation_finished(metrics: Dictionary) -> void:
 	print("[autoplay_runner] Simulation finished: %s" % JSON.stringify(metrics))

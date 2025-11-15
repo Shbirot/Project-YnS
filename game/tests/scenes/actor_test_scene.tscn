@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://src/features/player/hero.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://src/features/enemy/enemy_basic.tscn" id="2"]
+
+[node name="ActorTestScene" type="Node2D"]
+
+[node name="Hero" parent="." instance=ExtResource("1")]
+position = Vector2(-100, 0)
+
+[node name="Enemy" parent="." instance=ExtResource("2")]
+position = Vector2(100, 0)

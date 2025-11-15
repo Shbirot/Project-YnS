@@ -1,11 +1,11 @@
 extends Node
 
-var _pool := {}
+var _pool = {}
 
 func fetch_enemy(scene: PackedScene) -> Node:
 	if scene == null:
 		return null
-	var key := scene.resource_path
+	var key = scene.resource_path
 	var bucket: Array = _pool.get(key, [])
 	var enemy: Node = null
 	if bucket.size() > 0:

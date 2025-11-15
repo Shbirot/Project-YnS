@@ -5,12 +5,14 @@ const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 @onready var health_value: Label = %HealthValue
 @onready var level_value: Label = %LevelValue
 @onready var xp_bar: ProgressBar = %XPBar
+@onready var version_label: Label = %VersionLabel
 var _event_bus: Node
 var _level_manager: Node
 
 func _ready() -> void:
 	_bind_event_bus()
 	_bind_level_manager()
+	_update_version_label()
 
 func _bind_event_bus() -> void:
 	_event_bus = SingletonUtil.get_event_bus()
@@ -49,3 +51,12 @@ func _on_leveled_up(level: int) -> void:
 func _on_hero_died(_hero: Node) -> void:
 	if health_value:
 		health_value.text = "DEFEATED"
+
+func _update_version_label() -> void:
+	if version_label == null:
+		return
+	var version_info = SingletonUtil.get_version_info()
+	if version_info:
+		version_label.text = "v%s" % version_info.version_string
+	else:
+		version_label.text = "vDEV"

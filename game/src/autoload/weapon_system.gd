@@ -1,15 +1,12 @@
 extends Node
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
-const WeaponDataRework = preload("res://src/features/weapons/weapon_data.gd")
+const WeaponBase = preload("res://src/features/weapons/weapon_base.gd")
+const DebugUtils = preload("res://src/shared/scripts/debug_utils.gd")
 
-class WeaponInstance extends RefCounted:
-	var data: WeaponDataRework
-	var cooldown := 0.0
-
-var _hero: Node
-var _instances: Array[WeaponInstance] = []
 var _event_bus: Node
+var _actors: Array = []
+var _hero
 
 func _ready() -> void:
 	_event_bus = SingletonUtil.get_event_bus()
@@ -19,61 +16,66 @@ func _ready() -> void:
 		if not _event_bus.is_connected("hero_died", Callable(self, "_on_hero_died")):
 			_event_bus.connect("hero_died", Callable(self, "_on_hero_died"))
 	var level_manager = SingletonUtil.get_level_manager()
-	if level_manager:
-		if not level_manager.is_connected("leveled_up", Callable(self, "_on_hero_leveled")):
-			level_manager.connect("leveled_up", Callable(self, "_on_hero_leveled"))
+	if level_manager and not level_manager.is_connected("leveled_up", Callable(self, "_on_hero_leveled")):
+		level_manager.connect("leveled_up", Callable(self, "_on_hero_leveled"))
 
 func _process(delta: float) -> void:
-	if _hero == null or _instances.is_empty():
+	if _actors.is_empty():
 		return
-	for instance in _instances:
-		instance.cooldown -= delta
-		if instance.cooldown <= 0.0:
-			if _fire_weapon(instance.data):
-				instance.cooldown = _next_cooldown(instance.data)
+	for actor in _actors.duplicate():
+		if not is_instance_valid(actor):
+			_actors.erase(actor)
+			continue
+		if not actor.is_alive:
+			continue
+		var weapons: Array = actor.get_equipped_weapons()
+		for weapon in weapons:
+			if weapon == null:
+				continue
+			if weapon.has_method("ready_tick"):
+				weapon.ready_tick(delta, actor)
+			if weapon.has_method("try_fire"):
+				weapon.try_fire(actor)
 
-func register_hero(hero: Node) -> void:
-	_hero = hero
-	_instances.clear()
-	var loadout: Array = []
-	if hero.has_method("get_weapon_loadout"):
-		loadout = hero.get_weapon_loadout()
-	for weapon in loadout:
-		if weapon is WeaponDataRework:
-			var instance := WeaponInstance.new()
-			instance.data = weapon
-			instance.cooldown = randf() * _next_cooldown(weapon)
-			_instances.append(instance)
+func register_actor(actor) -> void:
+	if actor == null:
+		return
+	if _actors.has(actor):
+		return
+	_actors.append(actor)
+	# DEBUG-ONLY-START
+	DebugUtils.debug_log("Registered actor for weapons", {"name": actor.name})
+	# DEBUG-ONLY-END
+	if actor.is_in_group("hero") or _hero == null:
+		_hero = actor
 
-func _fire_weapon(weapon_data: WeaponDataRework) -> bool:
-	if _hero == null or weapon_data == null:
-		return false
-	if not _hero.has_method("fire_weapon"):
-		return false
-	return _hero.fire_weapon(weapon_data)
+func unregister_actor(actor) -> void:
+	if actor == null:
+		return
+	if _actors.has(actor):
+		_actors.erase(actor)
+		# DEBUG-ONLY-START
+		DebugUtils.debug_log("Unregistered actor for weapons", {"name": actor.name})
+		# DEBUG-ONLY-END
+	if _hero == actor:
+		_hero = null
 
 func _on_hero_spawned(hero: Node) -> void:
-	register_hero(hero)
+	if hero and hero.is_in_group("hero"):
+		register_actor(hero)
 
-func _on_hero_died(_hero_ref: Node) -> void:
-	_hero = null
-	_instances.clear()
+func _on_hero_died(hero: Node) -> void:
+	if hero and hero.is_in_group("hero"):
+		unregister_actor(hero)
 
 func _on_hero_leveled(level: int) -> void:
 	if _hero == null:
 		return
 	if not _hero.has_method("next_weapon_unlock"):
 		return
-	var weapon: WeaponDataRework = _hero.next_weapon_unlock(level)
-	if weapon and weapon is WeaponDataRework:
-		var instance := WeaponInstance.new()
-		instance.data = weapon
-		instance.cooldown = _next_cooldown(weapon)
-		_instances.append(instance)
-
-func _next_cooldown(weapon: WeaponDataRework) -> float:
-	var interval := weapon.get_fire_interval_value()
-	var multiplier := 1.0
-	if _hero and _hero.has_method("get_attack_speed_multiplier"):
-		multiplier = max(0.1, _hero.get_attack_speed_multiplier())
-	return max(0.01, interval / multiplier)
+	var next_weapon = _hero.next_weapon_unlock(level)
+	if next_weapon and next_weapon is WeaponBase:
+		_hero.add_weapon(next_weapon)
+		var logger = SingletonUtil.get_logger()
+		if logger:
+			logger.info("Hero unlocked weapon", {"weapon_id": next_weapon.id})

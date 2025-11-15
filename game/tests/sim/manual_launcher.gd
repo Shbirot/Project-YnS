@@ -1,8 +1,8 @@
 extends SceneTree
 
-@export var scene_path := "res://src/levels/main.tscn"
-var _auto_exit_seconds := 0
-var _elapsed := 0.0
+@export var scene_path = "res://src/levels/main.tscn"
+var _auto_exit_seconds = 0
+var _elapsed = 0.0
 
 func _initialize() -> void:
 	if OS.has_environment("MANUAL_LAUNCHER_AUTO_EXIT"):
@@ -10,7 +10,7 @@ func _initialize() -> void:
 	call_deferred("_launch")
 
 func _launch() -> void:
-	var packed := load(scene_path)
+	var packed = load(scene_path)
 	if packed == null:
 		push_error("[manual_launcher] Unable to load scene %s" % scene_path)
 		quit()

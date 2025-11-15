@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -33,7 +34,7 @@ def _run(cmd: list[str], env: dict[str, str] | None = None) -> None:
 
 def _load_devenv() -> dict[str, str]:
     if not DEVENV_PATH.exists():
-        DEVENV_PATH.write_text("# DEV environment variables\nMANUAL_LAUNCHER_AUTO_EXIT=30\n", encoding="utf-8")
+        DEVENV_PATH.write_text("# DEV environment variables\nMANUAL_LAUNCHER_AUTO_EXIT=30\nDEBUG=1\nNF_LOG_LEVEL=DEBUG\nDEBUG_COOLDOWN_MS=5000\n", encoding="utf-8")
     env_vars: dict[str, str] = {}
     for line in DEVENV_PATH.read_text(encoding="utf-8").splitlines():
         line = line.strip()
@@ -199,6 +200,54 @@ def aseprite_placeholder() -> None:
     print(f"[devtool] Expected binary: {bin_hint}")
 
 
+def build_prod() -> None:
+    _run([sys.executable, "scripts/build_manifest.py"])
+    stripped_project = REPO_ROOT / "build" / "stripped_game"
+    if stripped_project.exists():
+        shutil.rmtree(stripped_project)
+    shutil.copytree(GAME_DIR, stripped_project)
+    strip_cmd = [
+        sys.executable,
+        "scripts/strip_debug.py",
+        "--src",
+        str(GAME_DIR / "src"),
+        "--dest",
+        str(stripped_project / "src"),
+    ]
+    _run(strip_cmd)
+    version_file = REPO_ROOT / ".VERSION"
+    if version_file.exists():
+        shutil.copy(version_file, stripped_project / ".VERSION")
+    build_output = REPO_ROOT / "build" / "prod" / "nightfall.x86_64"
+    build_output.parent.mkdir(parents=True, exist_ok=True)
+    export_cmd = [
+        str(_godot_binary()),
+        "--headless",
+        "--path",
+        str(stripped_project),
+        "--export-release",
+        "Desktop Prod",
+        str(build_output),
+    ]
+    _run(export_cmd)
+
+
+def run_input_autoplay() -> None:
+    editor_smoke()
+    default_script = "res://tests/sim/autoplay/autoplay_input_basic.json"
+    script_path = input(f"Input script (res://...)? [{default_script}]: ").strip() or default_script
+    env = {"NF_INPUT_SCRIPT_PATH": script_path, "MANUAL_LAUNCHER_AUTO_EXIT": "0"}
+    cmd = [
+        str(_godot_binary()),
+        "--headless",
+        "--path",
+        str(GAME_DIR),
+        "--script",
+        "res://tests/sim/manual_launcher.gd",
+    ]
+    _run(cmd, env=env)
+
+
 MENU_OPTIONS = {
     "1": ("Launch Godot editor", launch_editor),
     "2": ("Run manual simulation (no auto-exit)", run_manual_simulation),
@@ -209,6 +258,8 @@ MENU_OPTIONS = {
     "7": ("Deploy build (placeholder)", deploy_placeholder),
     "8": ("Open Aseprite (placeholder)", aseprite_placeholder),
     "9": ("Edit .devenv variables", edit_devenv),
+    "10": ("Build prod export", build_prod),
+    "11": ("Run input-script autoplay", run_input_autoplay),
     "q": ("Quit", None),
 }
 

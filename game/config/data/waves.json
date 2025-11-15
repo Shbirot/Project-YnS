@@ -1,20 +1,23 @@
 {
+  "magic": "NF_WAVES_V1",
   "waves": [
-    { "time": 0, "enemies": [
-        { "type": "default_enemy", "count": 3 },
-        { "type": "ranged_enemy", "count": 3 }
+    { "time": 0, "spawns": [
+        { "archetype": "basic_swarmer", "count": 4 },
+        { "archetype": "elite_ranger", "count": 1 }
     ], "radius": 280 },
-    { "time": 20, "enemies": [
-        { "type": "default_enemy", "count": 3 },
-        { "type": "ranged_enemy", "count": 3 }
+    { "time": 20, "spawns": [
+        { "archetype": "empowered_brute", "count": 3 },
+        { "archetype": "elite_ranger", "count": 2 }
     ], "radius": 320 },
-    { "time": 40, "enemies": [
-        { "type": "default_enemy", "count": 3 },
-        { "type": "ranged_enemy", "count": 3 }
+    { "time": 40, "spawns": [
+        { "archetype": "miniboss_gladiator", "count": 1 },
+        { "archetype": "basic_swarmer", "count": 6 }
     ], "radius": 360 },
-    { "time": 60, "enemies": [
-        { "type": "default_enemy", "count": 3 },
-        { "type": "ranged_enemy", "count": 3 }
-    ], "radius": 400 }
+    { "time": 60, "spawns": [
+        { "archetype": "stage_boss_abomination", "count": 1 }
+    ], "radius": 400 },
+    { "time": 90, "spawns": [
+        { "archetype": "event_boss_reaper", "count": 1 }
+    ], "radius": 420 }
   ]
 }

@@ -20,6 +20,6 @@ func emit_safe(signal_name: StringName, args: Array = []) -> void:
 	if not has_signal(signal_name):
 		push_warning("EventBus missing signal: %s" % signal_name)
 		return
-	var call_args := [signal_name]
+	var call_args = [signal_name]
 	call_args.append_array(args)
 	Callable(self, "emit_signal").callv(call_args)

@@ -1,0 +1,10 @@
+[
+  { "time": 0.0, "action": "ui_right", "pressed": true },
+  { "time": 1.5, "action": "ui_right", "pressed": false },
+  { "time": 1.5, "action": "ui_up", "pressed": true },
+  { "time": 3.0, "action": "ui_up", "pressed": false },
+  { "time": 3.0, "action": "ui_left", "pressed": true },
+  { "time": 4.5, "action": "ui_left", "pressed": false },
+  { "time": 4.5, "action": "ui_down", "pressed": true },
+  { "time": 6.0, "action": "ui_down", "pressed": false }
+]

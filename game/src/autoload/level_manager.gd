@@ -2,11 +2,11 @@ extends Node
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 
-@export var starting_level := 1
-@export var xp_curve := PackedFloat32Array([30, 70, 130, 200, 300])
+@export var starting_level = 1
+@export var xp_curve = PackedFloat32Array([30, 70, 130, 200, 300])
 
-var current_level := 1
-var current_xp := 0
+var current_level = 1
+var current_xp = 0
 var _event_bus: Node
 
 signal xp_changed(current_xp, required_xp, level)

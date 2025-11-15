@@ -1,7 +1,7 @@
 extends "res://tests/robot/logic_test_case.gd"
 
-const ProjectileScene := preload("res://src/features/projectiles/projectile_basic.tscn")
-const SingletonUtil := preload("res://src/shared/scripts/singleton_util.gd")
+const ProjectileScene = preload("res://src/features/projectiles/projectile_basic.tscn")
+const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 
 func get_name() -> String:
 	return "ProjectilePool"

@@ -3,8 +3,8 @@ extends Camera2D
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 
 @export var target_path: NodePath
-@export var follow_speed := 6.0
-@export var world_bounds := Rect2(Vector2(-1024, -1024), Vector2(2048, 2048))
+@export var follow_speed = 6.0
+@export var world_bounds = Rect2(Vector2(-1024, -1024), Vector2(2048, 2048))
 
 var _target: Node2D
 
@@ -18,7 +18,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _target == null:
 		return
-	var desired := _target.global_position
+	var desired = _target.global_position
 	global_position = global_position.lerp(desired, clamp(delta * follow_speed, 0.0, 1.0))
 	_clamp_to_bounds()
 
@@ -35,9 +35,9 @@ func set_world_bounds(bounds: Rect2) -> void:
 	world_bounds = bounds
 
 func _clamp_to_bounds() -> void:
-	var min_x := world_bounds.position.x
-	var min_y := world_bounds.position.y
-	var max_x := world_bounds.position.x + world_bounds.size.x
-	var max_y := world_bounds.position.y + world_bounds.size.y
+	var min_x = world_bounds.position.x
+	var min_y = world_bounds.position.y
+	var max_x = world_bounds.position.x + world_bounds.size.x
+	var max_y = world_bounds.position.y + world_bounds.size.y
 	global_position.x = clamp(global_position.x, min_x, max_x)
 	global_position.y = clamp(global_position.y, min_y, max_y)

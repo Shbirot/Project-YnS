@@ -1,8 +1,11 @@
 extends SceneTree
 
-const TEST_DIR := "res://tests/robot/cases"
-const BASE_TEST := preload("res://tests/robot/logic_test_case.gd")
-const AUTOLOAD_SPECS := [
+const TEST_DIRS = [
+	"res://tests/robot/cases",
+	"res://tests/unit",
+]
+const BASE_TEST = preload("res://tests/robot/logic_test_case.gd")
+const AUTOLOAD_SPECS = [
 	{"name": "GameConfig", "path": "res://autoload/game_config.gd"},
 	{"name": "EventBus", "path": "res://autoload/event_bus.gd"},
 	{"name": "GameCatalog", "path": "res://src/autoload/game_catalog.gd"},
@@ -11,15 +14,16 @@ const AUTOLOAD_SPECS := [
 	{"name": "ProjectilePool", "path": "res://autoload/projectile_pool.gd"},
 	{"name": "WeaponSystem", "path": "res://src/autoload/weapon_system.gd"},
 	{"name": "EnemyPool", "path": "res://src/autoload/enemy_pool.gd"},
+	{"name": "Logger", "path": "res://src/autoload/logger.gd"},
 ]
 
-var _results := []
-var _summary := {"total": 0, "failed": 0}
-var _output_path := "user://logic_results.json"
-var _skip_ui := OS.has_environment("SKIP_UI_TESTS")
+var _results = []
+var _summary = {"total": 0, "failed": 0}
+var _output_path = "user://logic_results.json"
+var _skip_ui = OS.has_environment("SKIP_UI_TESTS")
 var _case_filters : Array = []
-var _matched_cases := {}
-var _verbose := OS.has_environment("LOGIC_TEST_VERBOSE")
+var _matched_cases = {}
+var _verbose = OS.has_environment("LOGIC_TEST_VERBOSE")
 
 func _initialize() -> void:
 	_install_autoloads()
@@ -43,9 +47,13 @@ func _parse_args() -> void:
 				_case_filters.append(filter)
 
 func _run_all_cases() -> void:
-	var dir = DirAccess.open(TEST_DIR)
+	for test_dir in TEST_DIRS:
+		_run_cases_in_dir(test_dir)
+	_validate_case_filters()
+
+func _run_cases_in_dir(test_dir: String) -> void:
+	var dir = DirAccess.open(test_dir)
 	if dir == null:
-		push_error("Logic tests directory missing: %s" % TEST_DIR)
 		return
 	dir.list_dir_begin()
 	while true:
@@ -54,12 +62,11 @@ func _run_all_cases() -> void:
 			break
 		if dir.current_is_dir() or not file.ends_with(".gd"):
 			continue
-		var path = TEST_DIR + "/" + file
+		var path = test_dir + "/" + file
 		if not _should_run_case(path):
 			continue
 		_run_case(path)
 	dir.list_dir_end()
-	_validate_case_filters()
 
 func _run_case(path: String) -> void:
 	print("--- [Runner] Attempting to run case: %s" % path)

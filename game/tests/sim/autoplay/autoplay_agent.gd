@@ -3,27 +3,27 @@ class_name AutoplayAgent
 
 signal simulation_finished(metrics: Dictionary)
 
-@export var duration := 20.0
+@export var duration = 20.0
 @export var movement_sequence: Array = []
-@export var randomize_after_sequence := true
-@export var random_turn_interval := 1.5
-@export var seed := 0
-@export var log_interval := 5.0
+@export var randomize_after_sequence = true
+@export var random_turn_interval = 1.5
+@export var seed = 0
+@export var log_interval = 5.0
 
 var _hero: Node
 var _event_bus: Node
-var _elapsed := 0.0
-var _segment_time := 0.0
-var _sequence_index := 0
-var _random_time := 0.0
-var _rng := RandomNumberGenerator.new()
-var _metrics := {
+var _elapsed = 0.0
+var _segment_time = 0.0
+var _sequence_index = 0
+var _random_time = 0.0
+var _rng = RandomNumberGenerator.new()
+var _metrics = {
 	"enemies_defeated": 0,
 	"xp_collected": 0,
 	"level_reached": 1,
 	"duration": 0.0
 }
-var _next_log := 0.0
+var _next_log = 0.0
 
 func set_hero_reference(hero: Node) -> void:
 	_hero = hero
@@ -72,7 +72,7 @@ func _physics_process(delta: float) -> void:
 
 	if _sequence_index < movement_sequence.size():
 		var segment = movement_sequence[_sequence_index]
-		var target_seconds := float(segment.get("seconds", 1.0))
+		var target_seconds = float(segment.get("seconds", 1.0))
 		if _segment_time >= target_seconds:
 			_sequence_index += 1
 			_segment_time = 0.0
@@ -100,11 +100,11 @@ func _apply_sequence_direction() -> void:
 	if _sequence_index >= movement_sequence.size():
 		return
 	var entry = movement_sequence[_sequence_index]
-	var dir := _direction_from_entry(entry)
+	var dir = _direction_from_entry(entry)
 	_set_hero_direction(dir)
 
 func _apply_random_direction() -> void:
-	var angle := _rng.randf_range(0, TAU)
+	var angle = _rng.randf_range(0, TAU)
 	var dir = Vector2.RIGHT.rotated(angle)
 	_set_hero_direction(dir)
 

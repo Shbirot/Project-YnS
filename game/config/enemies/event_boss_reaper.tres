@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyArchetype" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/features/enemy/enemy_archetype.gd" id="1"]
+[ext_resource type="Resource" path="res://config/enemies/stats/event_boss_reaper_stats.tres" id="2"]
+[ext_resource type="Resource" path="res://src/features/enemy/ai/kite_ai.tres" id="3"]
+[ext_resource type="PackedScene" path="res://src/features/enemy/ranged_enemy.tscn" id="4"]
+[ext_resource type="Resource" path="res://src/features/weapons/boss_beam_weapon.tres" id="5"]
+
+[resource]
+script = ExtResource("1")
+id = "event_boss_reaper"
+display_name = "Event Boss Reaper"
+type = "event_boss"
+stats = ExtResource("2")
+ai_controller = ExtResource("3")
+weapon_slots = [ExtResource("5")]
+scene = ExtResource("4")

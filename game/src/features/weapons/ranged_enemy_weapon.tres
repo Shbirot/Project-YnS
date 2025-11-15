@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="RangedWeapon" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/features/weapons/ranged_weapon.gd" id="1"]
+[ext_resource type="PackedScene" path="res://src/features/projectiles/projectile_basic.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "enemy_ranged"
+env_prefix = "NF_RANGED_ENEMY"
+ammo_scene = ExtResource("2")
+cooldown = 1.6
+damage = 6.0
+projectile_speed = 340.0
+projectile_count = 1
+spread_degrees = 0.0
+fire_offset = 18.0

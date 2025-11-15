@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MeleeWeapon" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/features/weapons/melee_weapon.gd" id="1"]
+[ext_resource type="PackedScene" path="res://src/features/weapons/melee_hitbox.tscn" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "gladiator_blade"
+env_prefix = "NF_WEAPON_GLADIATOR_BLADE"
+ammo_scene = ExtResource("2")
+cooldown = 1.0
+damage = 10.0
+fire_offset = 32.0
+arc_count = 1
+arc_spread_degrees = 60.0

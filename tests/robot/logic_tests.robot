@@ -14,6 +14,12 @@ Hero Weapon Fire
 XP Collection
     Run Single Case    ${CASE_DIR}/xp_collection_test.gd
 
+Boss Spawn
+    Run Single Case    ${CASE_DIR}/enemy_boss_spawn_test.gd
+
+Environmental Weapon Damage
+    Run Single Case    ${CASE_DIR}/environmental_weapon_damage_test.gd
+
 *** Keywords ***
 Run Single Case
     [Arguments]    ${case_path}

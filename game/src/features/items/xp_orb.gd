@@ -2,9 +2,9 @@ extends Area2D
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 
-@export var xp_value := 10
-@export var magnet_speed := 180.0
-@export var pickup_radius := 48.0
+@export var xp_value = 10
+@export var magnet_speed = 180.0
+@export var pickup_radius = 48.0
 
 var _hero: Node2D
 var _event_bus: Node
@@ -19,9 +19,9 @@ func _physics_process(delta: float) -> void:
 		_hero = _find_hero()
 	if _hero == null:
 		return
-	var distance := global_position.distance_to(_hero.global_position)
+	var distance = global_position.distance_to(_hero.global_position)
 	if distance <= pickup_radius:
-		var direction := ( _hero.global_position - global_position ).normalized()
+		var direction = ( _hero.global_position - global_position ).normalized()
 		global_position += direction * magnet_speed * delta
 
 func _on_body_entered(body: Node) -> void:

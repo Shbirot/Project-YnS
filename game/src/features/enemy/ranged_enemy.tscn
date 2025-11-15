@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/features/enemy/ranged_enemy.gd" id="1"]
 [ext_resource type="SpriteFrames" path="res://src/shared/assets/frames/poc_enemy_frames.tres" id="2"]
 [ext_resource type="PackedScene" path="res://src/features/items/xp_orb.tscn" id="3"]
 [ext_resource type="Resource" path="res://src/features/enemy/enemy_animation_profile.tres" id="4"]
-[ext_resource type="PackedScene" path="res://src/features/projectiles/projectile_basic.tscn" id="5"]
+[ext_resource type="Resource" path="res://src/features/weapons/ranged_enemy_weapon.tres" id="5"]
 [ext_resource type="Resource" path="res://src/features/enemy/ranged_enemy_stats.tres" id="6"]
 
 [sub_resource type="CircleShape2D" id="1"]
@@ -15,9 +15,9 @@ script = ExtResource("1")
 collision_layer = 8
 collision_mask = 5
 xp_orb_scene = ExtResource("3")
-projectile_scene = ExtResource("5")
 animation_profile = ExtResource("4")
 stats_profile = ExtResource("6")
+ranged_weapon = ExtResource("5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2")
@@ -26,8 +26,3 @@ centered = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
-
-[node name="FireTimer" type="Timer" parent="."]
-autostart = false
-one_shot = false
-wait_time = 1.6

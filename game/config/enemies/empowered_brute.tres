@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyArchetype" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/features/enemy/enemy_archetype.gd" id="1"]
+[ext_resource type="Resource" path="res://config/enemies/stats/empowered_brute_stats.tres" id="2"]
+[ext_resource type="Resource" path="res://src/features/enemy/ai/chase_ai.tres" id="3"]
+[ext_resource type="PackedScene" path="res://src/features/enemy/enemy_basic.tscn" id="4"]
+
+[resource]
+script = ExtResource("1")
+id = "empowered_brute"
+display_name = "Empowered Brute"
+type = "empowered"
+stats = ExtResource("2")
+ai_controller = ExtResource("3")
+scene = ExtResource("4")

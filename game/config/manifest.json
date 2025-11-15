@@ -1,0 +1,44 @@
+{
+  "config/data/waves.json": {
+    "sha256": "3c026d348b9ef2afe5fdb86d32b3c92e503a57bc6f4947f9634821cc8df3ec87"
+  },
+  "config/data/waves_stress.json": {
+    "sha256": "c95ac8b4162813d62b4288c3612c4a6b64e62a0eb0684b2fdf4269cd7dc3f76e"
+  },
+  "config/enemies/miniboss_gladiator.tres": {
+    "sha256": "99613ffe6bfd1489a36805b851e76b0e3ad02e8dfc558736ce98a4bcd3ece585"
+  },
+  "config/enemies/elite_ranger.tres": {
+    "sha256": "da9950dad4eb58b1ac7b6369c3b6a7cdd4e4f62833962e7555ed4da9212843e3"
+  },
+  "config/enemies/empowered_brute.tres": {
+    "sha256": "967c291ac38f868285c41a1dd67738899679777132936afc3feb900215529f9a"
+  },
+  "config/enemies/basic_swarmer.tres": {
+    "sha256": "ccd6b47b55bbfc66c2905d4b9af42155b5367653bfe5f0e385b84c248f323606"
+  },
+  "config/enemies/event_boss_reaper.tres": {
+    "sha256": "9915ce3da0c8a8bcf3041c5a7f9038e49b25f4eb655642f319c7594b276d4be0"
+  },
+  "config/enemies/stage_boss_abomination.tres": {
+    "sha256": "5d4382c8082fa9328ea255c8bb3865aae32d56130cb7a589f6fde7e7105c9f0d"
+  },
+  "config/enemies/stats/empowered_brute_stats.tres": {
+    "sha256": "b9cd388b8abba8f540e2a71688f664b9568a9323bfe636ee4793447d4f222be4"
+  },
+  "config/enemies/stats/basic_swarmer_stats.tres": {
+    "sha256": "c747a8742b3f68b5d4736177ae766fba80bbb2b38243b783fcf048391224b371"
+  },
+  "config/enemies/stats/elite_ranger_stats.tres": {
+    "sha256": "6499cd3b22ac4e9ba9952fb55cdc10c599bb0bbd6dd32f886a5b8eb3cd8ad5c6"
+  },
+  "config/enemies/stats/miniboss_gladiator_stats.tres": {
+    "sha256": "19e913df4a0654097923149ce4a5c5cece06271ce1a6ffdb19a37adc1818dcb4"
+  },
+  "config/enemies/stats/event_boss_reaper_stats.tres": {
+    "sha256": "277ba9fd82f8fe9dc8712e0bf92df5d18f279eaa1a5cfc3c04f16aca92ebe2e5"
+  },
+  "config/enemies/stats/stage_boss_abomination_stats.tres": {
+    "sha256": "c4c950cd24eb8413c1881a0831664f2d33e9f5470709502056080bd5a8171df5"
+  }
+}

@@ -1,0 +1,3 @@
+# DEV environment variables
+MANUAL_LAUNCHER_AUTO_EXIT=30
+DEBUG=1

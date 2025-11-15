@@ -1,11 +1,11 @@
 extends "res://src/features/enemy/monster_base.gd"
 
-@export var damage := 5.0
+@export var damage = 5.0
 @onready var damage_area: Area2D = $DamageArea
 
 func _on_monster_ready() -> void:
 	var cfg = SingletonUtil.get_game_config()
-	var base_damage := get_stat_value("attack", damage)
+	var base_damage = get_stat_value("attack", damage)
 	damage = cfg.get_env_value("NF_ENEMY_DAMAGE", base_damage)
 	if damage_area:
 		damage_area.body_entered.connect(_on_damage_area_entered)
