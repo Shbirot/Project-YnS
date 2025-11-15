@@ -11,20 +11,21 @@ config_version=5
 [application]
 
 config/name="Nightfall Survivor"
-config/description="Top-down arena roguelite built for mobile."
-run/main_scene="res://scenes/rework/main.tscn"
+config/description="PC prototype for a top-down roguelite."
+run/main_scene="res://src/levels/main.tscn"
 config/features=PackedStringArray("4.5")
 boot_splash/bg_color=Color(0.105882, 0.121569, 0.223529, 1)
-config/icon="res://assets/icons/app_icon.svg"
+config/icon="res://src/shared/assets/poc/coin/coin.svg"
 
 [autoload]
 
-GameConfig="*res://autoload/game_config.gd"
-EventBus="*res://autoload/event_bus.gd"
-ReworkCatalog="*res://autoload/rework_catalog.gd"
-LevelManager="*res://autoload/level_manager.gd"
-DamageSystem="*res://autoload/damage_system.gd"
-ProjectilePool="*res://autoload/projectile_pool.gd"
+GameConfig="*res://src/autoload/game_config.gd"
+EventBus="*res://src/autoload/event_bus.gd"
+GameCatalog="*res://src/autoload/game_catalog.gd"
+LevelManager="*res://src/autoload/level_manager.gd"
+DamageSystem="*res://src/autoload/damage_system.gd"
+ProjectilePool="*res://src/autoload/projectile_pool.gd"
+WeaponSystem="*res://src/autoload/weapon_system.gd"
 
 [display]
 

@@ -5,10 +5,11 @@ const BASE_TEST := preload("res://tests/robot/logic_test_case.gd")
 const AUTOLOAD_SPECS := [
 	{"name": "GameConfig", "path": "res://autoload/game_config.gd"},
 	{"name": "EventBus", "path": "res://autoload/event_bus.gd"},
-	{"name": "ReworkCatalog", "path": "res://autoload/rework_catalog.gd"},
+	{"name": "GameCatalog", "path": "res://src/autoload/game_catalog.gd"},
 	{"name": "LevelManager", "path": "res://autoload/level_manager.gd"},
 	{"name": "DamageSystem", "path": "res://autoload/damage_system.gd"},
 	{"name": "ProjectilePool", "path": "res://autoload/projectile_pool.gd"},
+	{"name": "WeaponSystem", "path": "res://src/autoload/weapon_system.gd"},
 ]
 
 var _results := []

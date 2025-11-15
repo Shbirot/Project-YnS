@@ -89,7 +89,7 @@ def run_manual_simulation() -> None:
         "--path",
         str(GAME_DIR),
         "--script",
-        "res://tests/rework/manual_launcher.gd",
+        "res://tests/sim/manual_launcher.gd",
     ]
     _run(cmd, env=env)
 
@@ -106,13 +106,13 @@ def run_timed_simulation() -> None:
         "--path",
         str(GAME_DIR),
         "--script",
-        "res://tests/rework/manual_launcher.gd",
+        "res://tests/sim/manual_launcher.gd",
     ]
     _run(cmd, env=env)
 
 
 def run_autoplay() -> None:
-    default_cfg = "res://tests/rework/autoplay/autoplay_basic.json"
+    default_cfg = "res://tests/sim/autoplay/autoplay_basic.json"
     cfg = input(f"Autoplay config (res://...)? [{default_cfg}]: ").strip() or default_cfg
     cmd = [
         str(_godot_binary()),
@@ -120,7 +120,7 @@ def run_autoplay() -> None:
         "--path",
         str(GAME_DIR),
         "--script",
-        "res://tests/rework/autoplay/autoplay_runner.gd",
+        "res://tests/sim/autoplay/autoplay_runner.gd",
         "--",
         "--config",
         cfg,

@@ -1,8 +1,8 @@
 extends "res://tests/robot/logic_test_case.gd"
 
-const HeroScene := preload("res://scenes/rework/hero.tscn")
-const OrbScene := preload("res://scenes/rework/xp_orb.tscn")
-const SingletonUtil := preload("res://scripts/utils/singleton_util.gd")
+const HeroScene := preload("res://src/features/player/hero.tscn")
+const OrbScene := preload("res://src/features/items/xp_orb.tscn")
+const SingletonUtil := preload("res://src/shared/scripts/singleton_util.gd")
 
 func get_name() -> String:
 	return "XPCollection"

@@ -1,6 +1,6 @@
 extends "res://tests/robot/logic_test_case.gd"
 
-const MainScene := preload("res://scenes/rework/main.tscn")
+const MainScene := preload("res://src/levels/main.tscn")
 
 func get_name() -> String:
 	return "WorldBoot"
@@ -14,7 +14,7 @@ func run_case() -> void:
 	tree.current_scene = world
 
 	var hero := world.get_node_or_null("Hero")
-	assert_true(hero != null, "Hero node is present in rework scene")
+	assert_true(hero != null, "Hero node is present in main scene")
 
 	var spawner := world.get_node_or_null("SpawnerController")
 	assert_true(spawner != null, "SpawnerController exists")

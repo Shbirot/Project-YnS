@@ -1,2 +1,0 @@
-# Combat & Interactions
-<content placeholder>

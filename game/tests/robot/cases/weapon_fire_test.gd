@@ -1,6 +1,6 @@
 extends "res://tests/robot/logic_test_case.gd"
 
-const HeroScene := preload("res://scenes/rework/hero.tscn")
+const HeroScene := preload("res://src/features/player/hero.tscn")
 
 func get_name() -> String:
 	return "HeroWeaponFire"
@@ -18,7 +18,9 @@ func run_case() -> void:
 
 	hero.set_input_override(Vector2.RIGHT)
 	var existing_children := world.get_child_count()
-	hero._fire_weapon()
+	var primary_weapon := hero.get_primary_weapon()
+	if primary_weapon:
+		hero.fire_weapon(primary_weapon)
 
 	var projectile_spawned := world.get_child_count() > existing_children
 	assert_true(projectile_spawned, "Hero fired projectile into world")

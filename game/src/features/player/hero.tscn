@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/features/player/hero_character_body.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://src/shared/assets/frames/poc_hero_frames.tres" id="2"]
+[ext_resource type="Resource" path="res://src/features/weapons/basic_wand.tres" id="3"]
+[ext_resource type="Resource" path="res://src/features/player/hero_animation_profile.tres" id="4"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 20.0
+
+[node name="Hero" type="CharacterBody2D"]
+script = ExtResource("1")
+initial_weapons = [ExtResource("3")]
+animation_profile = ExtResource("4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2")
+animation = &"idle"
+centered = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
+
+[node name="CameraTarget" type="Node2D" parent="."]
