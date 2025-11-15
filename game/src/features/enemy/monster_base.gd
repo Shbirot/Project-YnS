@@ -69,15 +69,33 @@ func on_pool_recycled() -> void:
 func configure_from_archetype(archetype: EnemyArchetype) -> void:
 	if archetype == null:
 		return
+
+	if OS.has_environment("NF_DEBUG") and OS.get_environment("NF_DEBUG") == "1":
+		DebugUtils.debug_log("Archetype loaded", {"type": archetype.id})
+
 	if archetype.stats:
 		stats_profile = archetype.stats
 		stats = stats_profile
 	_cache_stats()
+
+	# Apply movement profile
+	if archetype.movement_profile:
+		max_speed = archetype.movement_profile.max_speed
+		acceleration = archetype.movement_profile.acceleration
+		friction = archetype.movement_profile.friction
+
+	# Apply animation profile
+	if archetype.animations:
+		animation_profile = archetype.animations
+		_apply_animation_profile()
+
 	if archetype.ai_controller:
 		ai_controller = archetype.ai_controller
 	_active_ai = ai_controller
+
 	if archetype.weapon_slots.size() > 0:
 		weapon_overrides = archetype.weapon_slots.duplicate()
+
 	if archetype.scene:
 		set_meta("archetype_scene", archetype.scene)
 
