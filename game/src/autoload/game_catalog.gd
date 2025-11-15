@@ -6,6 +6,7 @@ extends Node
 var _entries := {
 	"hero": "res://src/features/player/hero.tscn",
 	"default_enemy": "res://src/features/enemy/enemy_basic.tscn",
+	"ranged_enemy": "res://src/features/enemy/ranged_enemy.tscn",
 	"default_projectile": "res://src/features/projectiles/projectile_basic.tscn",
 	"xp_orb": "res://src/features/items/xp_orb.tscn",
 }

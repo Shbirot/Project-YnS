@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="StatBlock" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/shared/resources/stat_block.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+env_prefix = "NF_HERO_STATS"
+max_hp = 120.0
+attack = 10.0
+defense = 5.0
+crit_rate = 5.0
+crit_damage = 175.0
+speed = 280.0
+attack_speed = 1.0
+avoid_chance = 2.5
+luck = 5.0
+hp_regen = 0.1
+exp_rate = 1.0

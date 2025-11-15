@@ -26,6 +26,7 @@ LevelManager="*res://src/autoload/level_manager.gd"
 DamageSystem="*res://src/autoload/damage_system.gd"
 ProjectilePool="*res://src/autoload/projectile_pool.gd"
 WeaponSystem="*res://src/autoload/weapon_system.gd"
+EnemyPool="*res://src/autoload/enemy_pool.gd"
 
 [display]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/features/items/xp_orb.gd" id="1"]
-[ext_resource type="Texture2D" path="res://src/shared/assets/poc/projectile/spark_projectile.png" id="2"]
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/coin/coin.png" id="2"]
 [sub_resource type="CircleShape2D" id="1"]
 radius = 10.0
 
@@ -15,5 +15,4 @@ shape = SubResource("1")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2")
-modulate = Color(0.3, 0.8, 1, 1)
-scale = Vector2(0.2, 0.2)
+scale = Vector2(0.5, 0.5)

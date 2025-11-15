@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 		instance.cooldown -= delta
 		if instance.cooldown <= 0.0:
 			if _fire_weapon(instance.data):
-				instance.cooldown = max(0.01, instance.data.get_fire_interval_value())
+				instance.cooldown = _next_cooldown(instance.data)
 
 func register_hero(hero: Node) -> void:
 	_hero = hero
@@ -42,7 +42,7 @@ func register_hero(hero: Node) -> void:
 		if weapon is WeaponDataRework:
 			var instance := WeaponInstance.new()
 			instance.data = weapon
-			instance.cooldown = randf() * weapon.get_fire_interval_value()
+			instance.cooldown = randf() * _next_cooldown(weapon)
 			_instances.append(instance)
 
 func _fire_weapon(weapon_data: WeaponDataRework) -> bool:
@@ -68,5 +68,12 @@ func _on_hero_leveled(level: int) -> void:
 	if weapon and weapon is WeaponDataRework:
 		var instance := WeaponInstance.new()
 		instance.data = weapon
-		instance.cooldown = weapon.get_fire_interval_value()
+		instance.cooldown = _next_cooldown(weapon)
 		_instances.append(instance)
+
+func _next_cooldown(weapon: WeaponDataRework) -> float:
+	var interval := weapon.get_fire_interval_value()
+	var multiplier := 1.0
+	if _hero and _hero.has_method("get_attack_speed_multiplier"):
+		multiplier = max(0.1, _hero.get_attack_speed_multiplier())
+	return max(0.01, interval / multiplier)

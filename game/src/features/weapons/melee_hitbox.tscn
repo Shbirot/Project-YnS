@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/features/weapons/melee_hitbox.gd" id="1"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 20.0
+
+[node name="MeleeHitbox" type="Area2D"]
+script = ExtResource("1")
+collision_layer = 16
+collision_mask = 5
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")

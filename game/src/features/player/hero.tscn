@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://src/features/player/hero_character_body.gd" id="1"]
+[ext_resource type="Script" path="res://src/features/player/base_hero.gd" id="1"]
 [ext_resource type="SpriteFrames" path="res://src/shared/assets/frames/poc_hero_frames.tres" id="2"]
 [ext_resource type="Resource" path="res://src/features/weapons/basic_wand.tres" id="3"]
 [ext_resource type="Resource" path="res://src/features/player/hero_animation_profile.tres" id="4"]
+[ext_resource type="Resource" path="res://src/features/player/hero_stats.tres" id="5"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 20.0
@@ -12,6 +13,7 @@ radius = 20.0
 script = ExtResource("1")
 initial_weapons = [ExtResource("3")]
 animation_profile = ExtResource("4")
+stats_profile = ExtResource("5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2")

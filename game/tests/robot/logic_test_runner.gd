@@ -10,6 +10,7 @@ const AUTOLOAD_SPECS := [
 	{"name": "DamageSystem", "path": "res://autoload/damage_system.gd"},
 	{"name": "ProjectilePool", "path": "res://autoload/projectile_pool.gd"},
 	{"name": "WeaponSystem", "path": "res://src/autoload/weapon_system.gd"},
+	{"name": "EnemyPool", "path": "res://src/autoload/enemy_pool.gd"},
 ]
 
 var _results := []

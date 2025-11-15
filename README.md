@@ -64,9 +64,13 @@ They run quickly, exercise the same scripts as the live game, and keep `./script
 
 ## Combat & weapons
 
-Enemies now derive from `Monster` (`res://src/features/enemy/monster.gd`), a base class that plugs in animation profiles, lightweight hero tracking, and health management. Specific behaviours such as XP drops or contact damage are layered in subclasses (see `basic_enemy.gd`). The spawner tags each enemy with its wave index, emits `wave_spawned`/`wave_completed`, and listens for `enemy_died(enemy, source)` so HUD or progression logic can react without tight coupling.
+Enemies now derive from `MonsterBase` (`res://src/features/enemy/monster_base.gd`), a base class that plugs in animation profiles, lightweight hero tracking, pooling hooks, and health management. Specific behaviours such as XP drops or ranged barrages are layered in subclasses (see `basic_enemy.gd` for melee and `ranged_enemy.gd` for projectile casters). The spawner tags each enemy with its wave index, emits `wave_spawned`/`wave_completed`, and listens for `enemy_died(enemy, source)` so HUD or progression logic can react without tight coupling.
 
 The hero exports `initial_weapons` and `weapon_unlock_order`, and the new `WeaponSystem` autoload ticks `WeaponDataRework` resources every frame. When a weapon’s cooldown reaches zero, the autoload asks the hero to `fire_weapon()`—projectiles still spawn through the hero so offsets, pooling, and targeting stay centralized. Level-up events simply unlock the next resource in the queue, making it trivial to add additional weapons: drop the `.tres` file in `src/features/weapons/`, list it in the hero scene, and the rest of the pipeline picks it up automatically.
+
+## Stats profiles
+
+Both the hero and enemies now point to `StatBlock` resources (`res://src/shared/resources/stat_block.gd`) that hold HP/ATK/DEF/crit/attack-speed/etc. Each block has an `env_prefix`, so you can override any stat via environment variables (e.g., `NF_HERO_STATS_MAX_HP=200`). Hero scripts expose helper getters (`get_attack_speed_multiplier`, `get_crit_profile`, etc.) and `WeaponSystem` automatically scales fire intervals based on the hero’s attack-speed stat. Enemy subclasses query their base stats with `get_stat_value("attack", ...)`, making it easy to tweak melee vs ranged archetypes without editing code.
 
 ## Animation profiles & spritesheets
 
@@ -88,6 +92,7 @@ Every animated entity (hero, enemies, future NPCs) now points to an `AnimationPr
 | `DamageSystem` | Applies hero/enemy damage and broadcasts hits. |
 | `ProjectilePool` | Recycles projectile instances for performance. |
 | `WeaponSystem` | Manages hero loadouts, cooldowns, and unlocks. |
+| `EnemyPool` | Reuses enemy instances to avoid instantiate/queue_free churn. |
 
 This is the entire runtime surface now—no ObjectFactory, BootLoader, or PersistenceManager remain. Extend these singletons when you add new systems so both the editor run and the automated simulators behave the same.
 
@@ -102,12 +107,15 @@ Most gameplay defaults can be overridden via environment variables (and therefor
 | `NF_HERO_MAX_SPEED`, `NF_HERO_ACCELERATION`, `NF_HERO_FRICTION` | Override hero movement stats. |
 | `NF_HERO_MAX_HEALTH` | Adjust hero health pool. |
 | `NF_HERO_PROJECTILE_OFFSET` | Fine-tune where projectiles spawn relative to the hero. |
+| `NF_HERO_STATS_*` | Overrides for the hero’s StatBlock (e.g., `NF_HERO_STATS_MAX_HP`, `..._SPEED`, `..._ATTACK_SPEED`). |
 | `NF_ENEMY_MAX_HEALTH`, `NF_ENEMY_MOVE_SPEED`, `NF_ENEMY_ACCELERATION`, `NF_ENEMY_FRICTION`, `NF_ENEMY_DAMAGE` | Enemy tuning knobs. |
+| `NF_ENEMY_BASIC_STATS_*`, `NF_ENEMY_RANGED_STATS_*` | StatBlock overrides for melee/ranged enemies (`..._ATTACK`, `..._SPEED`, etc.). |
 | `NF_XP_VALUE`, `NF_XP_MAGNET_SPEED`, `NF_XP_PICKUP_RADIUS` | XP orb behavior. |
 | `NF_WAVE_CONFIG_PATH` | Alternate wave JSON file. |
 | `NF_LEVEL_STARTING_LEVEL` | Starting level for the `LevelManager`. |
 | `NF_WEAPON_BASIC_WAND_FIRE_INTERVAL`, `..._DAMAGE`, `..._PROJECTILE_SPEED` | Weapon-specific tuning (prefix matches the weapon’s `env_prefix`). |
 | `NF_ANIM_HERO_*_SPEED`, `NF_ANIM_ENEMY_*_SPEED` | Per-animation SpriteFrames speed overrides driven by `AnimationProfile` resources. |
 | `NF_ANIM_HERO_SPEED_SCALE`, `NF_ANIM_ENEMY_SPEED_SCALE` | Optional overall speed-scale applied to AnimatedSprite2D nodes. |
+| `NF_RANGED_FIRE_INTERVAL`, `NF_RANGED_PROJECTILE_SPEED`, `NF_RANGED_PROJECTILE_DAMAGE`, `NF_RANGED_PROJECTILE_OFFSET` | Ranged enemy projectile cadence and visuals. |
 
 Set these in `.devenv` (via devtool option 9) or export them in your shell before launching Godot. Omitted keys fall back to the exported defaults in the scene/resource files.

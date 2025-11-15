@@ -13,10 +13,12 @@ var _catalog: Node
 var _hero: Node2D
 var _active_wave_counts: Dictionary = {}
 var _wave_lookup: Dictionary = {}
+var _enemy_pool: Node
 
 func _ready() -> void:
 	_event_bus = SingletonUtil.get_event_bus()
 	_catalog = SingletonUtil.get_game_catalog()
+	_enemy_pool = SingletonUtil.get_enemy_pool()
 	var cfg = SingletonUtil.get_game_config()
 	wave_config_path = cfg.get_env_value("NF_WAVE_CONFIG_PATH", wave_config_path)
 	spawn_padding = cfg.get_env_value("NF_SPAWN_PADDING", spawn_padding)
@@ -55,24 +57,45 @@ func _try_spawn() -> void:
 			_spawned_wave_indices[i] = true
 
 func _spawn_wave(wave: Dictionary, wave_index: int) -> void:
-	var count := int(wave.get("count", 1))
-	for j in range(count):
-		_spawn_single_enemy(wave, wave_index)
-	if count > 0:
-		_active_wave_counts[wave_index] = _active_wave_counts.get(wave_index, 0) + count
+	var entries: Array = wave.get("enemies", [])
+	if entries.is_empty():
+		var default_wave := {"type": wave.get("enemy", "default_enemy"), "count": wave.get("count", 1)}
+		entries = [default_wave]
+	for entry in entries:
+		var type: String = entry.get("type", "default_enemy")
+		var count := int(entry.get("count", 1))
+		for j in range(count):
+			_spawn_single_enemy(type, wave, wave_index)
+		if count > 0:
+			_active_wave_counts[wave_index] = _active_wave_counts.get(wave_index, 0) + count
 	if _event_bus:
 		_event_bus.emit_safe("wave_spawned", [wave])
 
-func _spawn_single_enemy(wave: Dictionary, wave_index: int) -> void:
+func _spawn_single_enemy(enemy_type: String, wave: Dictionary, wave_index: int) -> void:
 	if _catalog == null:
 		return
-	var key = wave.get("enemy", "default_enemy")
-	var enemy: Node = _catalog.instantiate(key)
+	var scene_path: String = _catalog.get_scene_path(enemy_type)
+	if scene_path == "":
+		return
+	var packed: PackedScene = load(scene_path)
+	if packed == null:
+		return
+	var enemy: Node = null
+	if _enemy_pool:
+		enemy = _enemy_pool.fetch_enemy(packed)
+	else:
+		enemy = packed.instantiate()
 	if enemy == null:
 		return
-	get_tree().current_scene.add_child(enemy)
-	enemy.global_position = _spawn_position(wave)
+	var world := get_tree().current_scene
+	if world and enemy.get_parent() != world:
+		if enemy.get_parent():
+			enemy.get_parent().remove_child(enemy)
+		world.add_child(enemy)
 	enemy.set_meta("spawn_wave_index", wave_index)
+	var position := _spawn_position(wave)
+	if enemy.has_method("prepare_for_spawn"):
+		enemy.prepare_for_spawn(position)
 	if _event_bus:
 		_event_bus.emit_safe("enemy_spawned", [enemy])
 

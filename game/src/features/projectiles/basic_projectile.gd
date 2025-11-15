@@ -57,7 +57,14 @@ func on_pool_acquired() -> void:
 	set_deferred("monitorable", true)
 	set_deferred("monitoring", true)
 	lifetime_timer.stop()
-	lifetime_timer.start()
+	if is_inside_tree():
+		lifetime_timer.start()
+	else:
+		call_deferred("_restart_timer")
+
+func _restart_timer() -> void:
+	if lifetime_timer and is_inside_tree():
+		lifetime_timer.start()
 
 func _return_to_pool() -> void:
 	var parent := get_parent()
