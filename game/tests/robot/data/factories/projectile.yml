@@ -1,9 +1,0 @@
-{
-  "id": "test_yaml_projectile",
-  "scene": "res://scenes/projectiles/magic_spark_projectile.tscn",
-  "properties": {
-    "damage": 77,
-    "speed": 910.0,
-    "despawn_margin": 25.0
-  }
-}

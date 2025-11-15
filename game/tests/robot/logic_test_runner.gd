@@ -3,12 +3,12 @@ extends SceneTree
 const TEST_DIR := "res://tests/robot/cases"
 const BASE_TEST := preload("res://tests/robot/logic_test_case.gd")
 const AUTOLOAD_SPECS := [
-	{"name": "Logger", "path": "res://autoload/logger.gd"},
-	{"name": "ConfigManager", "path": "res://autoload/config_manager.gd"},
 	{"name": "GameConfig", "path": "res://autoload/game_config.gd"},
-	{"name": "PersistenceManager", "path": "res://autoload/persistence_manager.gd"},
-	{"name": "ObjectCatalog", "path": "res://scripts/factories/object_catalog.gd"},
-	{"name": "GameController", "path": "res://scripts/core/game_controller.gd", "initialize": true},
+	{"name": "EventBus", "path": "res://autoload/event_bus.gd"},
+	{"name": "ReworkCatalog", "path": "res://autoload/rework_catalog.gd"},
+	{"name": "LevelManager", "path": "res://autoload/level_manager.gd"},
+	{"name": "DamageSystem", "path": "res://autoload/damage_system.gd"},
+	{"name": "ProjectilePool", "path": "res://autoload/projectile_pool.gd"},
 ]
 
 var _results := []
@@ -22,7 +22,6 @@ var _verbose := OS.has_environment("LOGIC_TEST_VERBOSE")
 func _initialize() -> void:
 	_install_autoloads()
 	_disable_file_logging()
-	_disable_api_server()
 	_parse_args()
 	_run_all_cases()
 	_write_results()
@@ -30,12 +29,7 @@ func _initialize() -> void:
 	quit(exit_code)
 
 func _disable_file_logging() -> void:
-	var root = get_root()
-	if root == null:
-		return
-	var logger = root.get_node_or_null("Logger")
-	if logger and "_file_logging_enabled" in logger:
-		logger._file_logging_enabled = false
+	pass
 
 func _parse_args() -> void:
 	for arg in OS.get_cmdline_args():
@@ -45,16 +39,6 @@ func _parse_args() -> void:
 			var filter = arg.split("=", true, 1)[1]
 			if filter != "":
 				_case_filters.append(filter)
-
-func _disable_api_server() -> void:
-	var root = get_root()
-	if root == null:
-		return
-	var controller = root.get_node_or_null("GameController")
-	if controller and "_api_manager" in controller:
-		var api = controller._api_manager
-		if api and api.has_method("stop"):
-			api.stop()
 
 func _run_all_cases() -> void:
 	var dir = DirAccess.open(TEST_DIR)

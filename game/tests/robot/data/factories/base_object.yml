@@ -1,9 +1,0 @@
-{
-  "id": "test_stone_block",
-  "scene": "res://scenes/immovable_stone.tscn",
-  "properties": {
-    "visible": false,
-    "position": [42, 64],
-    "scale": [0.5, 0.5]
-  }
-}

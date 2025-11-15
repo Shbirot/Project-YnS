@@ -1,8 +1,6 @@
 extends RefCounted
 class_name LogicTestCase
 
-const Log = preload("res://scripts/utils/log_helper.gd")
-
 var _results := []
 var _summary_lines := []
 
@@ -29,8 +27,6 @@ func assert_equal(actual, expected, message: String) -> void:
 		"actual": actual,
 		"expected": expected,
 	}
-	if not passed:
-		Log.warn("LogicTest assert failed: %s" % message)
 	push_result_dict(detail)
 
 func assert_eq(actual, expected, message: String) -> void:

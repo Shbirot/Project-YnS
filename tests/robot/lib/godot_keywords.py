@@ -52,8 +52,6 @@ class GodotKeywords:
         logs_dir = godot_home / "app_userdata" / "Nightfall Survivor" / "logs"
         logs_dir.mkdir(parents=True, exist_ok=True)
         env.setdefault("XDG_DATA_HOME", str(self.repo_root / ".godot-data"))
-        env.setdefault("DISABLE_API_MANAGER", "1")
-        env.setdefault("NIGHTFALL_DISABLE_BOOT", "1")
         cmd = [
             str(self.godot_bin),
             "--headless",

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/rework/enemy/basic_enemy.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://assets/characters/heroes/arcane_wanderer/arcane_wanderer_animations.tres" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/rework/xp_orb.tscn" id="3"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 18.0
+[sub_resource type="CircleShape2D" id="2"]
+radius = 24.0
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1")
+collision_layer = 8
+collision_mask = 5
+xp_orb_scene = ExtResource("3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2")
+animation = &"walk"
+centered = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")
+
+[node name="DamageArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
+shape = SubResource("2")

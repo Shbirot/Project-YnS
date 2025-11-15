@@ -1,0 +1,7 @@
+{
+  "waves": [
+    { "time": 0, "enemy": "default_enemy", "count": 4, "radius": 280 },
+    { "time": 20, "enemy": "default_enemy", "count": 6, "radius": 320 },
+    { "time": 40, "enemy": "default_enemy", "count": 8, "radius": 360 }
+  ]
+}

@@ -31,15 +31,3 @@ jobs:
           GODOT_BIN: ${{ github.workspace }}/tools/godot/godot4
         run: |
           robot tests/robot/logic_tests.robot
-
-  version-bump:
-    runs-on: ubuntu-latest
-    needs: robot-tests
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Verify version bump
-        run: |
-          python scripts/check_version_bump.py

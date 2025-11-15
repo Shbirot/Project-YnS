@@ -10,7 +10,6 @@ game/.godot/imported/
 persistence.json
 
 # Local tooling caches
-/tools/android-sdk/
 /tools/godot/
 
 # Android build artifacts
@@ -26,16 +25,9 @@ persistence.json
 .idea/
 .vscode/
 
-# Security
-/config/keystore/*.keystore
-/config/keystore/*.jks
-
 # macOS/Linux junk
 .DS_Store
 Thumbs.db
-
-# Godot Android templates
-/game/android/build/
 
 log.html
 output.xml

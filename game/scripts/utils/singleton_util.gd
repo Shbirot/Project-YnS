@@ -4,59 +4,51 @@ class_name SingletonUtil
 ## Utility for accessing autoload singletons
 ## Provides type-safe, cached access to common game singletons
 
-# Cached references
-static var _api_manager = null
-static var _game_controller = null
-static var _logger = null
-static var _config_manager = null
-static var _persistence_manager = null
-static var _object_catalog = null
+static var _event_bus = null
+static var _level_manager = null
+static var _rework_catalog = null
+static var _game_config = null
+static var _damage_system = null
+static var _projectile_pool = null
 
-## Get APIManager singleton
-## This is the primary game API - use this for all game state access
-static func get_api_manager():
-	if _api_manager == null:
-		_api_manager = _get_autoload("APIManager")
-	return _api_manager
+static func get_event_bus():
+	if _event_bus == null:
+		_event_bus = _get_autoload("EventBus")
+	return _event_bus
 
-## Get GameController singleton
-static func get_game_controller():
-	if _game_controller == null:
-		_game_controller = _get_autoload("GameController")
-	return _game_controller
+static func get_level_manager():
+	if _level_manager == null:
+		_level_manager = _get_autoload("LevelManager")
+	return _level_manager
 
-## Get Logger singleton
-static func get_logger():
-	if _logger == null:
-		_logger = _get_autoload("Logger")
-	return _logger
+static func get_rework_catalog():
+	if _rework_catalog == null:
+		_rework_catalog = _get_autoload("ReworkCatalog")
+	return _rework_catalog
 
-## Get ConfigManager singleton
-static func get_config_manager():
-	if _config_manager == null:
-		_config_manager = _get_autoload("ConfigManager")
-	return _config_manager
+static func get_game_config():
+	if _game_config == null:
+		_game_config = _get_autoload("GameConfig")
+	return _game_config
 
-## Get PersistenceManager singleton
-static func get_persistence_manager():
-	if _persistence_manager == null:
-		_persistence_manager = _get_autoload("PersistenceManager")
-	return _persistence_manager
+static func get_damage_system():
+	if _damage_system == null:
+		_damage_system = _get_autoload("DamageSystem")
+	return _damage_system
 
-## Get ObjectCatalog singleton
-static func get_object_catalog():
-	if _object_catalog == null:
-		_object_catalog = _get_autoload("ObjectCatalog")
-	return _object_catalog
+static func get_projectile_pool():
+	if _projectile_pool == null:
+		_projectile_pool = _get_autoload("ProjectilePool")
+	return _projectile_pool
 
 ## Clear all cached references (useful for tests)
 static func clear_cache() -> void:
-	_api_manager = null
-	_game_controller = null
-	_logger = null
-	_config_manager = null
-	_persistence_manager = null
-	_object_catalog = null
+	_event_bus = null
+	_level_manager = null
+	_rework_catalog = null
+	_game_config = null
+	_damage_system = null
+	_projectile_pool = null
 
 ## Internal helper to get autoload by name
 static func _get_autoload(name: String):

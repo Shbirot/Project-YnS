@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Texture2D" path="res://assets/projectile.svg" id="1"]
-
-[node name="SparkTail" type="Sprite2D"]
-texture = ExtResource("1")
-modulate = Color(0.4, 0.6, 1, 0.6)
-scale = Vector2(0.4, 0.8)
