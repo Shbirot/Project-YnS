@@ -209,11 +209,11 @@ func _setup_health_component() -> void:
 	_health_component.base_max_hp = max_hp
 	_health_component.hp = max_hp
 
-	# Connect signals
-	if not _health_component.died.is_connected(_on_health_component_died):
-		_health_component.died.connect(_on_health_component_died)
-	if not _health_component.health_changed.is_connected(_on_health_component_changed):
-		_health_component.health_changed.connect(_on_health_component_changed)
+	# Set callbacks instead of signals (performance optimization)
+	_health_component.set_callbacks(
+		Callable(self, "_on_health_component_died"),
+		Callable(self, "_on_health_component_changed")
+	)
 
 func _on_health_component_died(actor: Node) -> void:
 	on_actor_died(actor)
