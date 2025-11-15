@@ -2,12 +2,8 @@ extends "res://src/shared/scripts/actor_base.gd"
 
 @export var hero_base_hp = 120.0
 @export var camera_lerp_speed = 8.0
-@export var idle_animation = "idle"
-@export var breathing_animation = "breathing"
-@export var run_animation_prefix = "run_"
-@export var run_animation_fallback = "walk"
-@export var breathing_threshold = 5.0
 @export var animation_profile: AnimationProfile
+@export var animation_state_machine: AnimationStateMachine
 @export var animation_speed_scale_env = "NF_ANIM_HERO_SPEED_SCALE"
 @export var stats_profile = null
 @export var initial_weapons: Array = []
@@ -42,8 +38,8 @@ func _ready() -> void:
 		logger.info("Hero ready", {"base_hp": hero_base_hp, "stats_profile": stats_profile})
 	_apply_env_overrides()
 	_apply_animation_profile()
-	if animated_sprite:
-		animated_sprite.play(idle_animation)
+	if animated_sprite and animation_state_machine:
+		animated_sprite.play(animation_state_machine.idle_animation)
 	add_to_group("hero")
 	_event_bus = SingletonUtil.get_event_bus()
 	_initialize_weapons()
@@ -61,9 +57,8 @@ func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 
 func process_actor(delta: float) -> void:
-	var is_moving = _current_input.length_squared() > 0.0
 	_update_camera_target(delta)
-	_update_animation(is_moving, _current_input)
+	_update_animation(_current_input, velocity)
 
 func get_attack_direction() -> Vector2:
 	var desired = _desired_attack_direction()
@@ -76,29 +71,14 @@ func _update_camera_target(delta: float) -> void:
 	if camera_target:
 		camera_target.global_position = camera_target.global_position.lerp(global_position, clamp(delta * camera_lerp_speed, 0.0, 1.0))
 
-func _update_animation(is_moving: bool, input_vector: Vector2) -> void:
-	if animated_sprite == null:
+func _update_animation(input_vector: Vector2, current_velocity: Vector2) -> void:
+	if animated_sprite == null or animation_state_machine == null:
 		return
-	if is_moving:
-		var direction = _direction_from_vector(input_vector)
-		var anim_name = "%s%s" % [run_animation_prefix, direction]
-		if animated_sprite.sprite_frames.has_animation(anim_name):
-			animated_sprite.play(anim_name)
-		elif animated_sprite.sprite_frames.has_animation(run_animation_fallback):
-			animated_sprite.play(run_animation_fallback)
-		else:
-			animated_sprite.play(idle_animation)
-	else:
-		if velocity.length() > breathing_threshold and animated_sprite.sprite_frames.has_animation(breathing_animation):
-			animated_sprite.play(breathing_animation)
-		else:
-			animated_sprite.play(idle_animation)
 
-func _direction_from_vector(dir: Vector2) -> String:
-	if abs(dir.x) > abs(dir.y):
-		return "right" if dir.x > 0.0 else "left"
-	else:
-		return "down" if dir.y > 0.0 else "up"
+	var anim = animation_state_machine.compute(input_vector, current_velocity, animated_sprite.sprite_frames)
+	if OS.has_environment("NF_DEBUG") and OS.get_environment("NF_DEBUG") == "1":
+		DebugUtils.debug_log("Anim transition", {"state": anim})
+	animated_sprite.play(anim)
 
 func _desired_attack_direction() -> Vector2:
 	var dir = _find_target_direction()
@@ -151,8 +131,8 @@ func _apply_animation_profile() -> void:
 	var frames = animation_profile.instantiate_frames()
 	if frames:
 		animated_sprite.sprite_frames = frames
-	if animation_profile.default_animation != "":
-		idle_animation = animation_profile.default_animation
+	if animation_state_machine and animation_profile.default_animation != "":
+		animation_state_machine.idle_animation = animation_profile.default_animation
 
 func _cache_stats() -> void:
 	if stats_profile:
