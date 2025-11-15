@@ -2,7 +2,7 @@ extends Node
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 const EnemyArchetypeRegistry = preload("res://src/features/enemy/enemy_archetype_registry.gd")
-const ConfigLoader = preload("res://src/shared/scripts/config_loader.gd")
+const WaveConfigCache = preload("res://src/shared/scripts/wave_config_cache.gd")
 
 @export var wave_config_path = "res://config/data/waves.json"
 @export var archetype_dir = "res://config/enemies"
@@ -40,7 +40,7 @@ func _process(delta: float) -> void:
 	_try_spawn()
 
 func _load_waves() -> void:
-	var data = ConfigLoader.load_wave_config(wave_config_path)
+	var data = WaveConfigCache.get_wave_config(wave_config_path)
 	_waves = data.get("waves", [])
 	for i in range(_waves.size()):
 		_wave_lookup[i] = _waves[i]
