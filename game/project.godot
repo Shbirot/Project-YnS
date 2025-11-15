@@ -48,103 +48,16 @@ import/blender/enabled=false
 
 [input]
 
-ui_accept={
-"deadzone": 0.2,
-"events": [{
-"keycode": 32,
-"physical_keycode": 32,
-"type": "InputEventKey"
-}, {
-"keycode": 16777221,
-"physical_keycode": 16777221,
-"type": "InputEventKey"
-}]
-}
-ui_cancel={
-"deadzone": 0.2,
-"events": [{
-"keycode": 16777217,
-"physical_keycode": 16777217,
-"type": "InputEventKey"
-}]
-}
-ui_left={
-"deadzone": 0.2,
-"events": [{
-"keycode": 65,
-"physical_keycode": 65,
-"type": "InputEventKey"
-}, {
-"keycode": 4194319,
-"physical_keycode": 4194319,
-"type": "InputEventKey"
-}, {
-"keycode": 16777231,
-"physical_keycode": 16777231,
-"type": "InputEventKey"
-}]
-}
-ui_right={
-"deadzone": 0.2,
-"events": [{
-"keycode": 68,
-"physical_keycode": 68,
-"type": "InputEventKey"
-}, {
-"keycode": 4194321,
-"physical_keycode": 4194321,
-"type": "InputEventKey"
-}, {
-"keycode": 16777233,
-"physical_keycode": 16777233,
-"type": "InputEventKey"
-}]
-}
-ui_up={
-"deadzone": 0.2,
-"events": [{
-"keycode": 87,
-"physical_keycode": 87,
-"type": "InputEventKey"
-}, {
-"keycode": 4194320,
-"physical_keycode": 4194320,
-"type": "InputEventKey"
-}, {
-"keycode": 16777232,
-"physical_keycode": 16777232,
-"type": "InputEventKey"
-}]
-}
-ui_down={
-"deadzone": 0.2,
-"events": [{
-"keycode": 83,
-"physical_keycode": 83,
-"type": "InputEventKey"
-}, {
-"keycode": 4194322,
-"physical_keycode": 4194322,
-"type": "InputEventKey"
-}, {
-"keycode": 16777234,
-"physical_keycode": 16777234,
-"type": "InputEventKey"
-}]
-}
 move_up={
 "deadzone": 0.2,
 "events": [{
 "keycode": 87,
-"physical_keycode": 87,
 "type": "InputEventKey"
 }, {
 "keycode": 4194320,
-"physical_keycode": 4194320,
 "type": "InputEventKey"
 }, {
 "keycode": 16777232,
-"physical_keycode": 16777232,
 "type": "InputEventKey"
 }]
 }
@@ -152,15 +65,12 @@ move_down={
 "deadzone": 0.2,
 "events": [{
 "keycode": 83,
-"physical_keycode": 83,
 "type": "InputEventKey"
 }, {
 "keycode": 4194322,
-"physical_keycode": 4194322,
 "type": "InputEventKey"
 }, {
 "keycode": 16777234,
-"physical_keycode": 16777234,
 "type": "InputEventKey"
 }]
 }
@@ -168,15 +78,12 @@ move_left={
 "deadzone": 0.2,
 "events": [{
 "keycode": 65,
-"physical_keycode": 65,
 "type": "InputEventKey"
 }, {
 "keycode": 4194319,
-"physical_keycode": 4194319,
 "type": "InputEventKey"
 }, {
 "keycode": 16777231,
-"physical_keycode": 16777231,
 "type": "InputEventKey"
 }]
 }
@@ -184,15 +91,12 @@ move_right={
 "deadzone": 0.2,
 "events": [{
 "keycode": 68,
-"physical_keycode": 68,
 "type": "InputEventKey"
 }, {
 "keycode": 4194321,
-"physical_keycode": 4194321,
 "type": "InputEventKey"
 }, {
 "keycode": 16777233,
-"physical_keycode": 16777233,
 "type": "InputEventKey"
 }]
 }

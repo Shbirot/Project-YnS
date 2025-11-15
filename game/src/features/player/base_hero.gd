@@ -52,6 +52,10 @@ func _ready() -> void:
 	_emit_health_event()
 
 func _physics_process(delta: float) -> void:
+	DebugUtils.debug_log("Hero process flags", {
+		"use_input_override": _use_input_override,
+		"input_override": _input_override,
+	})
 	var input_vector = _read_movement_input()
 	DebugUtils.debug_log("Hero input vector", {"vector": input_vector})
 	_current_input = input_vector
@@ -87,10 +91,10 @@ func get_attack_direction() -> Vector2:
 	return desired
 
 func _read_movement_input() -> Vector2:
-	if _use_input_override:
-		DebugUtils.debug_log("Hero using input override", {"direction": _input_override})
-		return _input_override.normalized() if _input_override.length_squared() > 0.0 else Vector2.ZERO
-	var vector = Vector2(
+	var vector := Vector2.ZERO
+
+	# 1. Base vector from physical input (keyboard/gamepad)
+	vector = Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 	)
@@ -99,11 +103,18 @@ func _read_movement_input() -> Vector2:
 			Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
 			Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 		)
+
+	# 2. Optional override (e.g. simulation / bot / replay)
+	if _use_input_override and _input_override.length_squared() > 0.0:
+		DebugUtils.debug_log("Hero using input override", {"direction": _input_override})
+		vector = _input_override
+
 	if vector.length_squared() > 0.0:
 		DebugUtils.debug_log("Hero primary input", {"vector": vector})
 		return vector.normalized()
+
 	DebugUtils.debug_log("Hero no input", {})
-	return vector
+	return Vector2.ZERO
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
