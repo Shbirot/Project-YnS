@@ -82,11 +82,20 @@ func spawn_effect(scene: PackedScene, position: Vector2, parent: Node = null) ->
 	if scene == null:
 		return null
 
-	var effect = scene.instantiate()
+	# Use EffectPool for better performance
+	var effect_pool = get_node_or_null("/root/EffectPool")
+	var effect: Node = null
+
+	if effect_pool and effect_pool.has_method("acquire"):
+		effect = effect_pool.acquire(scene)
+	else:
+		effect = scene.instantiate()
+
 	if effect == null:
 		return null
 
-	effect.global_position = position
+	if effect is Node2D:
+		effect.global_position = position
 
 	# Add to scene
 	var target_parent = parent if parent else get_tree().current_scene
