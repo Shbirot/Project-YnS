@@ -19,8 +19,15 @@ var _equipped_weapons: Array = []
 var _weapon_system_registered = false
 var _health_component: HealthComponent
 
+# Cached physics values
+var _cached_max_speed: float = 280.0
+var _cached_acceleration: float = 1200.0
+var _cached_friction: float = 800.0
+var _cached_knockback_decay: float = 6.0
+
 func _ready() -> void:
 	_refresh_stats()
+	_cache_physics_values()
 	_setup_health_component()
 	_sync_weapon_slots()
 	_register_with_weapon_system()
@@ -118,18 +125,33 @@ func set_stat_override(name: String, value) -> void:
 	_stats_cache[name] = value
 
 func _apply_movement(delta: float) -> void:
-	var desired_velocity = _move_direction * max_speed
-	if _move_direction == Vector2.ZERO:
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+	# Use cached values to reduce property access overhead
+	var dir_is_zero = (_move_direction.x == 0.0 and _move_direction.y == 0.0)
+
+	if dir_is_zero:
+		velocity = velocity.move_toward(Vector2.ZERO, _cached_friction * delta)
 	else:
-		velocity = velocity.move_toward(desired_velocity, acceleration * delta)
-	velocity += _knockback_velocity
+		var desired_velocity = _move_direction * _cached_max_speed
+		velocity = velocity.move_toward(desired_velocity, _cached_acceleration * delta)
+
+	# Only add knockback if non-zero
+	if _knockback_velocity.x != 0.0 or _knockback_velocity.y != 0.0:
+		velocity += _knockback_velocity
+
 	move_and_slide()
 
 func _decay_knockback(delta: float) -> void:
-	if _knockback_velocity.length_squared() == 0.0:
+	# Early exit if no knockback
+	if _knockback_velocity.x == 0.0 and _knockback_velocity.y == 0.0:
 		return
-	_knockback_velocity = _knockback_velocity.move_toward(Vector2.ZERO, knockback_decay * delta)
+
+	_knockback_velocity = _knockback_velocity.move_toward(Vector2.ZERO, _cached_knockback_decay * delta)
+
+	# Detect NaN velocity
+	if is_nan(_knockback_velocity.x) or is_nan(_knockback_velocity.y):
+		if OS.has_environment("NF_DEBUG") and OS.get_environment("NF_DEBUG") == "1":
+			DebugUtils.debug_log("Invalid velocity", {"knockback": _knockback_velocity})
+		_knockback_velocity = Vector2.ZERO
 
 func _refresh_stats() -> void:
 	if stats:
@@ -138,6 +160,12 @@ func _refresh_stats() -> void:
 		_stats_cache.clear()
 	base_max_hp = _stats_cache.get("max_hp", base_max_hp)
 	max_speed = _stats_cache.get("speed", max_speed)
+
+func _cache_physics_values() -> void:
+	_cached_max_speed = max_speed
+	_cached_acceleration = acceleration
+	_cached_friction = friction
+	_cached_knockback_decay = knockback_decay
 
 func _sync_weapon_slots() -> void:
 	_equipped_weapons.clear()

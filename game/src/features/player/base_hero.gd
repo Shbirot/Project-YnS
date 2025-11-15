@@ -112,6 +112,7 @@ func _apply_env_overrides() -> void:
 	max_speed = cfg.get_env_value("NF_HERO_MAX_SPEED", max_speed)
 	acceleration = cfg.get_env_value("NF_HERO_ACCELERATION", acceleration)
 	friction = cfg.get_env_value("NF_HERO_FRICTION", friction)
+	_cache_physics_values()
 	camera_lerp_speed = cfg.get_env_value("NF_HERO_CAMERA_LERP", camera_lerp_speed)
 	base_max_hp = cfg.get_env_value("NF_HERO_MAX_HEALTH", base_max_hp)
 	_animation_speed_scale = cfg.get_env_value(animation_speed_scale_env, 1.0)

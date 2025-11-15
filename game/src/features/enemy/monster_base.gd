@@ -83,6 +83,7 @@ func configure_from_archetype(archetype: EnemyArchetype) -> void:
 		max_speed = archetype.movement_profile.max_speed
 		acceleration = archetype.movement_profile.acceleration
 		friction = archetype.movement_profile.friction
+		_cache_physics_values()
 
 	# Apply animation profile
 	if archetype.animations:
@@ -124,10 +125,10 @@ func _apply_env_overrides() -> void:
 	max_speed = cfg.get_env_value("NF_ENEMY_MOVE_SPEED", max_speed)
 	acceleration = cfg.get_env_value("NF_ENEMY_ACCELERATION", acceleration)
 	friction = cfg.get_env_value("NF_ENEMY_FRICTION", friction)
+	_cache_physics_values()
 	_animation_speed_scale = cfg.get_env_value(animation_speed_scale_env, 1.0)
 	if animated_sprite:
 		animated_sprite.speed_scale = _animation_speed_scale
-	hp = base_max_hp
 
 func _apply_animation_profile() -> void:
 	if animated_sprite == null or animation_profile == null:
