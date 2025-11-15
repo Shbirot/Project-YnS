@@ -117,7 +117,6 @@ func _apply_env_overrides() -> void:
 	_animation_speed_scale = cfg.get_env_value(animation_speed_scale_env, 1.0)
 	if animated_sprite:
 		animated_sprite.speed_scale = _animation_speed_scale
-	hp = clamp(hp, 0.0, base_max_hp)
 	DebugUtils.debug_log("Hero env overrides applied", {
 		"max_speed": max_speed,
 		"acceleration": acceleration,
@@ -171,7 +170,7 @@ func on_actor_died(_source: Node) -> void:
 
 func _emit_health_event() -> void:
 	if _event_bus:
-		_event_bus.emit_safe("hero_health_changed", [hp, base_max_hp])
+		_event_bus.emit_safe("hero_health_changed", [get_hp(), get_max_hp()])
 
 func _initialize_weapons() -> void:
 	_weapon_unlock_queue = weapon_unlock_order.duplicate()

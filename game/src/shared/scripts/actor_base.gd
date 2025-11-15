@@ -10,8 +10,6 @@ class_name ActorBase
 
 const MAX_WEAPONS = 5
 
-var hp = 0.0
-var is_alive = true
 var knockback_decay = 6.0
 
 var _move_direction = Vector2.ZERO
@@ -19,12 +17,11 @@ var _knockback_velocity = Vector2.ZERO
 var _stats_cache: Dictionary = {}
 var _equipped_weapons: Array = []
 var _weapon_system_registered = false
+var _health_component: HealthComponent
 
 func _ready() -> void:
 	_refresh_stats()
-	hp = max(0.0, get_stat("max_hp", base_max_hp))
-	if hp <= 0.0:
-		hp = base_max_hp
+	_setup_health_component()
 	_sync_weapon_slots()
 	_register_with_weapon_system()
 
@@ -36,7 +33,7 @@ func _exit_tree() -> void:
 	_unregister_from_weapon_system()
 
 func _physics_process(delta: float) -> void:
-	if not is_alive:
+	if not is_alive():
 		return
 	_apply_movement(delta)
 	_decay_knockback(delta)
@@ -49,7 +46,6 @@ func on_health_changed() -> void:
 	pass
 
 func on_actor_died(_source: Node) -> void:
-	is_alive = false
 	_unregister_from_weapon_system()
 
 func set_move_direction(direction: Vector2) -> void:
@@ -88,27 +84,32 @@ func clear_weapons() -> void:
 	_equipped_weapons.clear()
 
 func apply_damage(amount: float, source: Node) -> void:
-	if amount <= 0.0 or not is_alive:
-		return
-	hp = max(0.0, hp - amount)
-	is_alive = hp > 0.0
-	on_health_changed()
-	if not is_alive:
-		on_actor_died(source)
+	if _health_component:
+		_health_component.apply_damage(amount, source)
 
 func heal(amount: float) -> void:
-	if amount <= 0.0 or not is_alive:
-		return
-	var max_hp = get_stat("max_hp", base_max_hp)
-	hp = clamp(hp + amount, 0.0, max_hp)
-	on_health_changed()
+	if _health_component:
+		_health_component.heal(amount)
 
 func revive(full_hp = true) -> void:
-	var max_hp = get_stat("max_hp", base_max_hp)
-	hp = max_hp if full_hp else max(1.0, hp)
-	is_alive = true
-	on_health_changed()
-	_register_with_weapon_system()
+	if _health_component:
+		_health_component.revive(full_hp)
+		_register_with_weapon_system()
+
+func is_alive() -> bool:
+	if _health_component:
+		return _health_component.is_alive
+	return true
+
+func get_hp() -> float:
+	if _health_component:
+		return _health_component.get_hp()
+	return base_max_hp
+
+func get_max_hp() -> float:
+	if _health_component:
+		return _health_component.get_max_hp()
+	return base_max_hp
 
 func get_stat(name: String, default_value: float = 0.0) -> float:
 	return _stats_cache.get(name, default_value)
@@ -162,3 +163,32 @@ func _unregister_from_weapon_system() -> void:
 	if weapon_system and weapon_system.has_method("unregister_actor"):
 		weapon_system.unregister_actor(self)
 	_weapon_system_registered = false
+
+func _setup_health_component() -> void:
+	# Check if health component already exists as a child
+	for child in get_children():
+		if child is HealthComponent:
+			_health_component = child
+			break
+
+	# Create one if it doesn't exist
+	if not _health_component:
+		_health_component = HealthComponent.new()
+		add_child(_health_component)
+
+	# Set max HP from stats
+	var max_hp = get_stat("max_hp", base_max_hp)
+	_health_component.base_max_hp = max_hp
+	_health_component.hp = max_hp
+
+	# Connect signals
+	if not _health_component.died.is_connected(_on_health_component_died):
+		_health_component.died.connect(_on_health_component_died)
+	if not _health_component.health_changed.is_connected(_on_health_component_changed):
+		_health_component.health_changed.connect(_on_health_component_changed)
+
+func _on_health_component_died(actor: Node) -> void:
+	on_actor_died(actor)
+
+func _on_health_component_changed(_actor: Node, _current_hp: float, _max_hp: float) -> void:
+	on_health_changed()
