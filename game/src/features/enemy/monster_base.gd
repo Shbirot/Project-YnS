@@ -60,10 +60,14 @@ func prepare_for_spawn(position: Vector2) -> void:
 	_apply_weapon_overrides()
 	_active_ai = ai_controller
 	_hero = _find_hero()
+	# Register with EnemyManager
+	EnemyManager.register_enemy(self)
 	_on_spawn_prepared()
 
 func on_pool_recycled() -> void:
 	_set_active_state(false)
+	# Unregister from EnemyManager
+	EnemyManager.unregister_enemy(self)
 	_on_recycled()
 
 func configure_from_archetype(archetype: EnemyArchetype) -> void:

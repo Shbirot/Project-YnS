@@ -93,17 +93,8 @@ func _find_target_direction() -> Vector2:
 	return Vector2.ZERO
 
 func _nearest_enemy() -> Node2D:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	var min_dist = INF
-	var target: Node2D
-	for enemy in enemies:
-		if not (enemy is Node2D):
-			continue
-		var d = global_position.distance_squared_to(enemy.global_position)
-		if d < min_dist:
-			min_dist = d
-			target = enemy
-	return target
+	# Use EnemyManager instead of get_nodes_in_group for better performance
+	return EnemyManager.get_nearest_enemy(global_position)
 
 func _apply_env_overrides() -> void:
 	_cache_stats()
