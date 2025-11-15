@@ -19,6 +19,7 @@ config/icon="res://src/shared/assets/poc/coin/coin.svg"
 
 [autoload]
 
+InputDriver="*res://src/shared/scripts/input_driver.gd"
 GameConfig="*res://src/autoload/game_config.gd"
 EventBus="*res://src/autoload/event_bus.gd"
 GameCatalog="*res://src/autoload/game_catalog.gd"

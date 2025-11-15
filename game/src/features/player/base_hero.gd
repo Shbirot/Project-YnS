@@ -18,8 +18,6 @@ extends "res://src/shared/scripts/actor_base.gd"
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 var last_nonzero_input = Vector2.RIGHT
-var _input_override = Vector2.ZERO
-var _use_input_override = false
 var _event_bus: Node
 var _animation_speed_scale = 1.0
 var _weapon_unlock_queue: Array = []
@@ -52,12 +50,7 @@ func _ready() -> void:
 	_emit_health_event()
 
 func _physics_process(delta: float) -> void:
-	DebugUtils.debug_log("Hero process flags", {
-		"use_input_override": _use_input_override,
-		"input_override": _input_override,
-	})
-	var input_vector = _read_movement_input()
-	DebugUtils.debug_log("Hero input vector", {"vector": input_vector})
+	var input_vector = InputDriver.get_direction()
 	_current_input = input_vector
 	if input_vector.length_squared() > 0.0:
 		last_nonzero_input = input_vector
@@ -66,18 +59,6 @@ func _physics_process(delta: float) -> void:
 		_input_debug_timer += delta
 	set_move_direction(input_vector)
 	super._physics_process(delta)
-	if _input_debug_timer > 1.0:
-		DebugUtils.debug_log("Hero input idle", {
-			"move_right": Input.get_action_strength("move_right"),
-			"move_left": Input.get_action_strength("move_left"),
-			"move_down": Input.get_action_strength("move_down"),
-			"move_up": Input.get_action_strength("move_up"),
-			"ui_right": Input.get_action_strength("ui_right"),
-			"ui_left": Input.get_action_strength("ui_left"),
-			"ui_down": Input.get_action_strength("ui_down"),
-			"ui_up": Input.get_action_strength("ui_up"),
-		})
-		_input_debug_timer = 0.0
 
 func process_actor(delta: float) -> void:
 	var is_moving = _current_input.length_squared() > 0.0
@@ -90,35 +71,6 @@ func get_attack_direction() -> Vector2:
 		return super.get_attack_direction()
 	return desired
 
-func _read_movement_input() -> Vector2:
-	var vector := Vector2.ZERO
-
-	# 1. Base vector from physical input (keyboard/gamepad)
-	vector = Vector2(
-		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
-		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
-	)
-	if vector.length_squared() == 0.0:
-		vector = Vector2(
-			Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
-			Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
-		)
-
-	# 2. Optional override (e.g. simulation / bot / replay)
-	if _use_input_override and _input_override.length_squared() > 0.0:
-		DebugUtils.debug_log("Hero using input override", {"direction": _input_override})
-		vector = _input_override
-
-	if vector.length_squared() > 0.0:
-		DebugUtils.debug_log("Hero primary input", {"vector": vector})
-		return vector.normalized()
-
-	DebugUtils.debug_log("Hero no input", {})
-	return Vector2.ZERO
-
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		DebugUtils.debug_log("Hero key event", {"keycode": event.keycode, "pressed": event.pressed})
 
 func _update_camera_target(delta: float) -> void:
 	if camera_target:
@@ -219,15 +171,13 @@ func _cache_stats() -> void:
 	_exp_rate = _stats.get("exp_rate", _exp_rate)
 
 func set_input_override(direction: Vector2) -> void:
-	_input_override = direction
-	_use_input_override = true
+	InputDriver.set_override(direction)
 
 func clear_input_override() -> void:
-	_input_override = Vector2.ZERO
-	_use_input_override = false
+	InputDriver.clear_override()
 
 func override_active() -> bool:
-	return _use_input_override
+	return InputDriver.is_override_active()
 
 func on_health_changed() -> void:
 	_emit_health_event()
