@@ -175,7 +175,7 @@ func _emit_health_event() -> void:
 func _initialize_weapons() -> void:
 	_weapon_unlock_queue = weapon_unlock_order.duplicate()
 	if initial_weapons.is_empty():
-		var default_weapon = load("res://src/features/weapons/basic_wand.tres")
+		var default_weapon = WeaponRegistry.get_weapon("basic_wand")
 		if default_weapon:
 			initial_weapons.append(default_weapon)
 	clear_weapons()
