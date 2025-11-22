@@ -8,9 +8,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+LINUX = sys.platform.startswith("linux")
+WINDOWS = sys.platform.startswith("win32") or sys.platform.startswith("cygwin")
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 GAME_DIR = REPO_ROOT / "game"
-DEFAULT_GODOT = REPO_ROOT / "tools" / "godot" / "godot4"
+DEFAULT_GODOT = REPO_ROOT / "tools" / "godot" / ("godot4" + ".exe" if WINDOWS else "")
 DEVENV_PATH = REPO_ROOT / ".devenv"
 
 

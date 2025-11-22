@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkftwo0ql07lh"
-path="res://.godot/imported/animal.png-06a72990b44c8e92440e8845fb441bb6.ctex"
+uid="uid://brhtmy8ocyss1"
+path="res://.godot/imported/coin_spin_frame_left.png-abc6dae615df80ae429e1e49f9d88cae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/animal/animal.png"
-dest_files=["res://.godot/imported/animal.png-06a72990b44c8e92440e8845fb441bb6.ctex"]
+source_file="res://src/shared/assets/poc/coin/coin_spin_frame_left.png"
+dest_files=["res://.godot/imported/coin_spin_frame_left.png-abc6dae615df80ae429e1e49f9d88cae.ctex"]
 
 [params]
 

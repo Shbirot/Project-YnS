@@ -1,7 +1,7 @@
 extends Node2D
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
-const InputDriver = preload("res://tests/sim/input_driver.gd")
+const TestInputDriver = preload("res://tests/sim/input_driver.gd")
 const DebugUtils = preload("res://src/shared/scripts/debug_utils.gd")
 
 @export var hero_path: NodePath
@@ -64,7 +64,7 @@ func _spawn_input_driver() -> void:
 	if script_path == "":
 		DebugUtils.debug_log("Input driver disabled: NF_INPUT_SCRIPT_PATH empty", {})
 		return
-	var driver = InputDriver.new()
+	var driver = TestInputDriver.new()
 	driver.load_script(script_path)
 	add_child(driver)
 	DebugUtils.debug_log("Input driver spawned", {"script": script_path})

@@ -49,7 +49,7 @@ func _preload_weapons() -> void:
 		if not ResourceLoader.exists(path):
 			continue
 		var weapon = load(path)
-		if weapon and weapon.has("id"):
+		if weapon and "id" in weapon:
 			_weapons[weapon.id] = weapon
 
 func _preload_ammo() -> void:

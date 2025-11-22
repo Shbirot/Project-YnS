@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8hlgqdfwcv8r"
-path="res://.godot/imported/coin.png-b43ca3a7ad69d8c17a37b20ad90c94bd.ctex"
+uid="uid://cbudlu4skoqpx"
+path="res://.godot/imported/sphinx_frame_center.png-fd9fb0075f7c9fbfb7a34065513f6b83.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/coin/coin.png"
-dest_files=["res://.godot/imported/coin.png-b43ca3a7ad69d8c17a37b20ad90c94bd.ctex"]
+source_file="res://src/shared/assets/poc/environmental_decorations/sphinx/sphinx_frame_center.png"
+dest_files=["res://.godot/imported/sphinx_frame_center.png-fd9fb0075f7c9fbfb7a34065513f6b83.ctex"]
 
 [params]
 

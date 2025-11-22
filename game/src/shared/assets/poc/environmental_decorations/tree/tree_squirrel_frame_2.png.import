@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l5172sr7fd42"
-path="res://.godot/imported/hero_idle.png-f743d78042cea1ee4e20e1feff02bc04.ctex"
+uid="uid://ds11huab78uj1"
+path="res://.godot/imported/tree_squirrel_frame_2.png-fa6686001ed44f94fe08d7b24289f309.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/hero/hero_idle.png"
-dest_files=["res://.godot/imported/hero_idle.png-f743d78042cea1ee4e20e1feff02bc04.ctex"]
+source_file="res://src/shared/assets/poc/environmental_decorations/tree/tree_squirrel_frame_2.png"
+dest_files=["res://.godot/imported/tree_squirrel_frame_2.png-fa6686001ed44f94fe08d7b24289f309.ctex"]
 
 [params]
 

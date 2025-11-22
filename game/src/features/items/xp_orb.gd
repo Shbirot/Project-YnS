@@ -2,6 +2,7 @@ extends Area2D
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 
+@export var animation_profile: AnimationProfile
 @export var xp_value = 10
 @export var magnet_speed = 180.0
 @export var pickup_radius = 48.0
@@ -9,10 +10,20 @@ const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 var _hero: Node2D
 var _event_bus: Node
 
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 func _ready() -> void:
 	_apply_env_overrides()
+	_init_animation()
 	body_entered.connect(_on_body_entered)
 	_event_bus = SingletonUtil.get_event_bus()
+
+func _init_animation() -> void:
+	if animation_profile and animated_sprite:
+		var frames = animation_profile.instantiate_frames()
+		if frames:
+			animated_sprite.sprite_frames = frames
+			animated_sprite.play(animation_profile.default_animation)
 
 func _physics_process(delta: float) -> void:
 	if _hero == null:

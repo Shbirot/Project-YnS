@@ -64,6 +64,10 @@ static func get_version_info():
 		_version_info = _get_autoload("VersionInfo")
 	return _version_info
 
+## Get any autoload by name (not cached)
+static func get_node_or_null(name: String):
+	return _get_autoload(name)
+
 ## Clear all cached references (useful for tests)
 static func clear_cache() -> void:
 	_event_bus = null

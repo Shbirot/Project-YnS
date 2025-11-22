@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7pfvbnrbadvd"
-path="res://.godot/imported/tree.png-fa4e653d4f5080a86a6fe9be6775a908.ctex"
+uid="uid://bxvtlhxeqdx81"
+path="res://.godot/imported/tree_squirrel_frame_3.png-1169b75ee83f84722dcb79d9c89e0b44.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/tree/tree.png"
-dest_files=["res://.godot/imported/tree.png-fa4e653d4f5080a86a6fe9be6775a908.ctex"]
+source_file="res://src/shared/assets/poc/environmental_decorations/tree/tree_squirrel_frame_3.png"
+dest_files=["res://.godot/imported/tree_squirrel_frame_3.png-1169b75ee83f84722dcb79d9c89e0b44.ctex"]
 
 [params]
 

@@ -1,11 +1,29 @@
 extends Node
-class_name InputDriver
 
 ## Unified input pipeline for movement input
 ## Reduces redundant Input API calls and normalizes input logic
 
+const DEBUG_INPUT_DRIVER = false  # Set to true to enable debug logging
+
 var _override_direction := Vector2.ZERO
 var _override_active := false
+
+func _ready() -> void:
+	if DEBUG_INPUT_DRIVER:
+		print("[InputDriver] READY - Autoload initialized")
+	set_physics_process(true)
+
+func _input(event: InputEvent) -> void:
+	if not DEBUG_INPUT_DRIVER:
+		return
+	# Test if _input is even being called
+	if event is InputEventKey and event.pressed:
+		print("[InputDriver] _input received key: ", event.as_text())
+		# Test if action mapping works
+		print("[InputDriver] Action checks - move_right: ", Input.is_action_pressed("move_right"),
+			" move_left: ", Input.is_action_pressed("move_left"),
+			" move_up: ", Input.is_action_pressed("move_up"),
+			" move_down: ", Input.is_action_pressed("move_down"))
 
 # Cached action strengths for current frame
 var _cached_right := 0.0
@@ -19,8 +37,8 @@ var _cached_ui_up := 0.0
 var _cache_frame := -1
 
 func _physics_process(_delta: float) -> void:
-	# Reset cache each physics frame
-	_cache_frame = Engine.get_physics_frames()
+	# Cache is updated on-demand in get_direction(), not here
+	pass
 
 func get_direction() -> Vector2:
 	# Use override if active
@@ -38,6 +56,9 @@ func get_direction() -> Vector2:
 		_cached_down - _cached_up
 	)
 
+	if DEBUG_INPUT_DRIVER and (_cached_right > 0 or _cached_left > 0 or _cached_down > 0 or _cached_up > 0):
+		print("[InputDriver] Cached values - R:", _cached_right, " L:", _cached_left, " D:", _cached_down, " U:", _cached_up, " Vector:", vector)
+
 	# Fallback to ui_ actions if move_ actions are zero
 	if vector.length_squared() == 0.0:
 		vector = Vector2(
@@ -47,6 +68,8 @@ func get_direction() -> Vector2:
 
 	# Normalize and return
 	if vector.length_squared() > 0.0:
+		if DEBUG_INPUT_DRIVER:
+			print("[InputDriver] Returning normalized vector: ", vector.normalized())
 		if OS.has_environment("NF_DEBUG_INPUT") and OS.get_environment("NF_DEBUG_INPUT") == "1":
 			DebugUtils.debug_log("Input vector", {"dir": vector})
 		return vector.normalized()

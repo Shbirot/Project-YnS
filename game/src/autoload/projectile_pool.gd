@@ -56,9 +56,9 @@ func release(projectile: Node) -> void:
 			DebugUtils.debug_log("Projectile pool full, destroying", {"key": key})
 		return
 
-	# Remove from scene tree but don't free
+	# Remove from scene tree but don't free (deferred to avoid physics callback issues)
 	if projectile.get_parent():
-		projectile.get_parent().remove_child(projectile)
+		projectile.get_parent().call_deferred("remove_child", projectile)
 
 	bucket.append(projectile)
 	_pool[key] = bucket

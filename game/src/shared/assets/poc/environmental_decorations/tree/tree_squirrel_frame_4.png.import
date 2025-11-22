@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b87o5f38gpm07"
-path="res://.godot/imported/spark_projectile.png-d69e6a1cbc85eb4973574777cc64de6a.ctex"
+uid="uid://bc3hbe6essppb"
+path="res://.godot/imported/tree_squirrel_frame_4.png-538823633fdb9c08fbe6e8e29411dcef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/projectile/spark_projectile.png"
-dest_files=["res://.godot/imported/spark_projectile.png-d69e6a1cbc85eb4973574777cc64de6a.ctex"]
+source_file="res://src/shared/assets/poc/environmental_decorations/tree/tree_squirrel_frame_4.png"
+dest_files=["res://.godot/imported/tree_squirrel_frame_4.png-538823633fdb9c08fbe6e8e29411dcef.ctex"]
 
 [params]
 

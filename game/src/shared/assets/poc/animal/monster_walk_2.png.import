@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fblibe07jxxg"
-path="res://.godot/imported/coin.svg-fb36d4e6514a4558d5ac183d81e561b6.ctex"
+uid="uid://c7px4avy4aht3"
+path="res://.godot/imported/monster_walk_2.png-ea75d8f6b1072cc8d8f75c42f61f7b95.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/coin/coin.svg"
-dest_files=["res://.godot/imported/coin.svg-fb36d4e6514a4558d5ac183d81e561b6.ctex"]
+source_file="res://src/shared/assets/poc/animal/monster_walk_2.png"
+dest_files=["res://.godot/imported/monster_walk_2.png-ea75d8f6b1072cc8d8f75c42f61f7b95.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

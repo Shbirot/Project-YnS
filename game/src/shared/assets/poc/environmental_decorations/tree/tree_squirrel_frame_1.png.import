@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dv40ekrju6bi8"
-path="res://.godot/imported/hero_walk.png-805da43074f3dc91f5a6702f413bccbb.ctex"
+uid="uid://dffyglyhealtl"
+path="res://.godot/imported/tree_squirrel_frame_1.png-58519d4b59a3225a669d14ec3eedfac9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/shared/assets/poc/hero/hero_walk.png"
-dest_files=["res://.godot/imported/hero_walk.png-805da43074f3dc91f5a6702f413bccbb.ctex"]
+source_file="res://src/shared/assets/poc/environmental_decorations/tree/tree_squirrel_frame_1.png"
+dest_files=["res://.godot/imported/tree_squirrel_frame_1.png-58519d4b59a3225a669d14ec3eedfac9.ctex"]
 
 [params]
 

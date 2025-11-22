@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/coin/coin_spin_frame_center.png" id="1"]
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/coin/coin_spin_frame_left.png" id="2"]
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/coin/coin_spin_frame_center.png" id="3"]
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/coin/coin_spin_frame_right.png" id="4"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}],
+"loop": true,
+"name": &"spin",
+"speed": 8.0
+}]

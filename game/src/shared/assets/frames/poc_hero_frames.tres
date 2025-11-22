@@ -1,7 +1,7 @@
 [gd_resource type="SpriteFrames" load_steps=6 format=3]
 
-[ext_resource type="Texture2D" path="res://src/shared/assets/poc/hero/hero_idle.png" id="1"]
-[ext_resource type="Texture2D" path="res://src/shared/assets/poc/hero/hero_walk.png" id="2"]
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/hero/anubis_v1/anubis_walk_right_frame.png" id="1"]
+[ext_resource type="Texture2D" path="res://src/shared/assets/poc/hero/anubis_v1/anubis_walk_left_frame.png" id="2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1"]
 atlas = ExtResource("2")
@@ -9,15 +9,15 @@ region = Rect2(0, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2"]
 atlas = ExtResource("2")
-region = Rect2(256, 0, 256, 256)
+region = Rect2(0, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3"]
 atlas = ExtResource("2")
-region = Rect2(512, 0, 256, 256)
+region = Rect2(0, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4"]
 atlas = ExtResource("2")
-region = Rect2(768, 0, 256, 256)
+region = Rect2(0, 0, 256, 256)
 
 [resource]
 animations = [{

@@ -1,5 +1,4 @@
 extends Node
-class_name InputDriver
 
 const SingletonUtil = preload("res://src/shared/scripts/singleton_util.gd")
 

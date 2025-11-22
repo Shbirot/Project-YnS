@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AnimationProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/shared/scripts/animation_profile.gd" id="1"]
+[ext_resource type="SpriteFrames" path="res://src/shared/assets/frames/xp_orb_frames.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+sprite_frames = ExtResource("2")
+default_animation = "spin"
+animation_speeds = {
+"spin": 8.0
+}
+env_prefix = "NF_ANIM_XP_ORB"
